@@ -87,7 +87,6 @@ body {
 
 <h4 id="gameTitle" class="text-center mb-3">⌨️ اكتب اسم الصورة</h4>
 
-<!-- 🔥 الفئات (ديناميكية الآن) -->
 <select id="category" class="form-select mb-3"></select>
 
 <button id="startBtn" class="btn btn-success w-100 mb-3" onclick="startGame()">
@@ -122,7 +121,26 @@ placeholder="اكتب الإجابة هنا">
 
 <script>
 
-// 🌍 ترجمة (بدون تغيير)
+// ✅ تحميل الصور مع دعم JPG و jpg
+function loadImageWithFallback(imgElement, file) {
+
+    let base = "./images/";
+    let path = base + file;
+
+    imgElement.src = path;
+
+    imgElement.onerror = function () {
+        imgElement.onerror = null;
+
+        if (file.endsWith(".jpg")) {
+            imgElement.src = base + file.replace(".jpg", ".JPG");
+        } else if (file.endsWith(".JPG")) {
+            imgElement.src = base + file.replace(".JPG", ".jpg");
+        }
+    };
+}
+
+// 🌍 ترجمة
 const translations = {
     ar:{title:"⌨️ لعبة الكتابة",start:"ابدأ ▶",next:"السؤال التالي ▶",score:"النقاط",back:"⬅ الرجوع",search:"🔎 ابحث..."},
     fr:{title:"⌨️ Jeu d'écriture",start:"Commencer ▶",next:"Suivant ▶",score:"Score",back:"⬅ Retour",search:"🔎 Rechercher..."},
@@ -167,7 +185,6 @@ let current;
 let correctAnswer;
 let score=0;
 
-// 🔥 توليد الفئات تلقائيا
 function loadCategories(){
     let select=document.getElementById("category");
     select.innerHTML="";
@@ -194,7 +211,6 @@ function loadCategories(){
     });
 }
 
-// فلترة
 function loadFilteredData(){
     let search=document.getElementById("search").value.toLowerCase();
     let lang=document.querySelector("input[name='lang']:checked").value;
@@ -205,7 +221,6 @@ function loadFilteredData(){
     });
 }
 
-// بدء
 function startGame(){
 
     if(filteredData.length===0) filteredData=data;
@@ -224,7 +239,8 @@ function startGame(){
 
     current=filtered[Math.floor(Math.random()*filtered.length)];
 
-    document.getElementById("image").src="images/"+current.file;
+    loadImageWithFallback(document.getElementById("image"), current.file);
+
     correctAnswer=current.answers[lang]||"";
 
     document.getElementById("hint").innerText="عدد الحروف: "+correctAnswer.length;
@@ -234,7 +250,7 @@ function startGame(){
     document.getElementById("nextBtn").classList.add("d-none");
 }
 
-// خوارزمية (بدون تغيير)
+// خوارزمية
 function levenshtein(a,b){
     let m=[];
     for(let i=0;i<=b.length;i++)m[i]=[i];
@@ -250,7 +266,6 @@ function levenshtein(a,b){
     return m[b.length][a.length];
 }
 
-// تحقق (بدون تغيير)
 function checkAnswer(){
 
     let user=document.getElementById("answer").value.trim().toLowerCase();
@@ -284,7 +299,7 @@ function goBack(){
 
 window.onload=()=>{
     loadLanguage();
-    loadCategories(); // 🔥 مهم جدا
+    loadCategories();
     loadFilteredData();
 };
 
