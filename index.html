@@ -29,31 +29,39 @@ body {
 
 <div class="container text-center">
 
-<h2 class="text-white mb-4">إختر التطبيق المناسب</h2>
+<!-- 🌍 اختيار اللغة -->
+<div class="mb-3 text-white">
+    <label class="me-2"><input type="radio" name="lang" value="fr"> Français</label>
+    <label class="me-2"><input type="radio" name="lang" value="ar"> عربي</label>
+    <label class="me-2"><input type="radio" name="lang" value="en"> English</label>
+    <label class="me-2"><input type="radio" name="lang" value="nl"> Nederlands</label>
+</div>
+
+<h2 id="title" class="text-white mb-4">إختر التطبيق المناسب</h2>
 
 <div class="row g-3">
 
 <!-- 🖼️ معرض -->
 <div class="col-12">
     <div class="card shadow-lg p-3 border-0" onclick="goToGame('gallery.html')">
-        <h4>🖼️ عرض كل الصور</h4>
-        <p class="text-muted">استكشف جميع الصور</p>
+        <h4 id="galleryTitle">🖼️ عرض كل الصور</h4>
+        <p id="galleryDesc" class="text-muted">استكشف جميع الصور</p>
     </div>
 </div>
 
 <!-- ⌨️ كتابة -->
 <div class="col-6">
     <div class="card shadow p-3 border-0" onclick="goToGame('game2.html')">
-        <h5>⌨️ الكتابة</h5>
-        <small class="text-muted">اختبر مهارتك</small>
+        <h5 id="writeTitle">⌨️ الكتابة</h5>
+        <small id="writeDesc" class="text-muted">اختبر مهارتك</small>
     </div>
 </div>
 
 <!-- 🖼️ الصور -->
 <div class="col-6">
     <div class="card shadow p-3 border-0" onclick="goToGame('game1.html')">
-        <h5>🖼️ الصور</h5>
-        <small class="text-muted">تعلم بالصور</small>
+        <h5 id="imageTitle">🖼️ الصور</h5>
+        <small id="imageDesc" class="text-muted">تعلم بالصور</small>
     </div>
 </div>
 
@@ -65,15 +73,85 @@ body {
 
 <script>
 
-// 🔥 حل ذكي للمسارات (محلي + GitHub)
+// 🌍 الترجمات
+const translations = {
+    fr: {
+        title:"Choisissez l'application",
+        gallery:"🖼️ Voir toutes les images",
+        galleryDesc:"Explorer toutes les images",
+        write:"⌨️ Écriture",
+        writeDesc:"Testez vos compétences",
+        image:"🖼️ Images",
+        imageDesc:"Apprendre avec les images"
+    },
+    ar: {
+        title:"إختر التطبيق المناسب",
+        gallery:"🖼️ عرض كل الصور",
+        galleryDesc:"استكشف جميع الصور",
+        write:"⌨️ الكتابة",
+        writeDesc:"اختبر مهارتك",
+        image:"🖼️ الصور",
+        imageDesc:"تعلم بالصور"
+    },
+    en: {
+        title:"Choose the application",
+        gallery:"🖼️ View all images",
+        galleryDesc:"Explore all images",
+        write:"⌨️ Writing",
+        writeDesc:"Test your skills",
+        image:"🖼️ Images",
+        imageDesc:"Learn with images"
+    },
+    nl: {
+        title:"Kies de applicatie",
+        gallery:"🖼️ Bekijk alle afbeeldingen",
+        galleryDesc:"Verken alle afbeeldingen",
+        write:"⌨️ Schrijven",
+        writeDesc:"Test je vaardigheden",
+        image:"🖼️ Afbeeldingen",
+        imageDesc:"Leren met afbeeldingen"
+    }
+};
+
+// 💾 حفظ اللغة
+function saveLanguage(lang){
+    localStorage.setItem("lang", lang);
+}
+
+// 📥 تحميل اللغة (افتراضي فرنسي)
+function loadLanguage(){
+    let lang = localStorage.getItem("lang") || "fr";
+    document.querySelector(`input[name="lang"][value="${lang}"]`).checked = true;
+    applyTranslation(lang);
+}
+
+// 🌍 تطبيق الترجمة
+function applyTranslation(lang){
+    let t = translations[lang];
+
+    document.getElementById("title").innerText = t.title;
+    document.getElementById("galleryTitle").innerText = t.gallery;
+    document.getElementById("galleryDesc").innerText = t.galleryDesc;
+    document.getElementById("writeTitle").innerText = t.write;
+    document.getElementById("writeDesc").innerText = t.writeDesc;
+    document.getElementById("imageTitle").innerText = t.image;
+    document.getElementById("imageDesc").innerText = t.imageDesc;
+}
+
+// تغيير اللغة
+document.querySelectorAll("input[name='lang']").forEach(radio=>{
+    radio.addEventListener("change", e=>{
+        saveLanguage(e.target.value);
+        applyTranslation(e.target.value);
+    });
+});
+
+// 🔥 حل المسارات
 function goToGame(page) {
 
     let basePath = "";
 
-    // إذا كان على GitHub Pages
     if (window.location.hostname.includes("github.io")) {
-
-        // إذا لم نكن داخل htdocs نضيفه
         if (!window.location.pathname.includes("/htdocs/")) {
             basePath = "htdocs/";
         }
@@ -81,6 +159,9 @@ function goToGame(page) {
 
     window.location.href = basePath + page;
 }
+
+// 🚀 تشغيل
+window.onload = loadLanguage;
 
 </script>
 
