@@ -155,6 +155,25 @@ onclick="startGame()">
 
 <script>
 
+// ✅ تحميل الصور مع دعم JPG و jpg
+function loadImageWithFallback(imgElement, file) {
+
+    let base = "./images/";
+    let path = base + file;
+
+    imgElement.src = path;
+
+    imgElement.onerror = function () {
+        imgElement.onerror = null;
+
+        if (file.endsWith(".jpg")) {
+            imgElement.src = base + file.replace(".jpg", ".JPG");
+        } else if (file.endsWith(".JPG")) {
+            imgElement.src = base + file.replace(".JPG", ".jpg");
+        }
+    };
+}
+
 // 🌍 ترجمة
 const translations = {
     ar: {
@@ -223,7 +242,7 @@ function togglePanel(){
     document.getElementById("panel").classList.toggle("hidden");
 }
 
-// Game (بدون تغيير)
+// Game
 let data = imagesData;
 let filteredData = data;
 let current;
@@ -251,7 +270,7 @@ function startGame(){
 
     current = filteredData[Math.floor(Math.random()*filteredData.length)];
 
-    document.getElementById("image").src = "images/" + current.file;
+    loadImageWithFallback(document.getElementById("image"), current.file);
 
     correctAnswer = current.answers[lang] || "";
 
