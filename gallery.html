@@ -189,6 +189,19 @@ body {
 
 <script>
 
+// 🔥 دالة ذكية لمسار الصور (محلي + GitHub)
+function getImagePath(file) {
+    let base = "";
+
+    if (window.location.hostname.includes("github.io")) {
+        if (!window.location.pathname.includes("/htdocs/")) {
+            base = "htdocs/";
+        }
+    }
+
+    return base + "images/" + file;
+}
+
 // 🔥 toggle panel
 function togglePanel(){
     document.getElementById("panel").classList.toggle("hidden");
@@ -292,7 +305,7 @@ function loadGallery() {
                 card.className = "card shadow-sm border-0 h-100";
 
                 let img = document.createElement("img");
-                img.src = "images/" + item.file;
+                img.src = getImagePath(item.file);
                 img.className = "card-img-top";
                 img.onclick = () => openViewer(index);
 
@@ -327,7 +340,7 @@ function updateViewer() {
     let langs = getSelectedLanguages();
     let name = langs.map(l => item.answers[l]).filter(Boolean).join(" / ");
 
-    viewerImg.src = "images/" + item.file;
+    viewerImg.src = getImagePath(item.file);
     viewerText.innerText = name;
 }
 
