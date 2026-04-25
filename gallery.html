@@ -189,17 +189,9 @@ body {
 
 <script>
 
-// 🔥 دالة ذكية لمسار الصور (محلي + GitHub)
+// ✅ الحل النهائي لمسار الصور (بسيط ويعمل دائمًا)
 function getImagePath(file) {
-    let base = "";
-
-    if (window.location.hostname.includes("github.io")) {
-        if (!window.location.pathname.includes("/htdocs/")) {
-            base = "htdocs/";
-        }
-    }
-
-    return base + "images/" + file;
+    return "./images/" + file;
 }
 
 // 🔥 toggle panel
