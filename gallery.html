@@ -189,9 +189,23 @@ body {
 
 <script>
 
-// ✅ الحل النهائي لمسار الصور (بسيط ويعمل دائمًا)
-function getImagePath(file) {
-    return "./images/" + file;
+// ✅ تحميل الصور مع دعم JPG و jpg
+function loadImageWithFallback(imgElement, file) {
+
+    let base = "./images/";
+    let path = base + file;
+
+    imgElement.src = path;
+
+    imgElement.onerror = function () {
+        imgElement.onerror = null;
+
+        if (file.endsWith(".jpg")) {
+            imgElement.src = base + file.replace(".jpg", ".JPG");
+        } else if (file.endsWith(".JPG")) {
+            imgElement.src = base + file.replace(".JPG", ".jpg");
+        }
+    };
 }
 
 // 🔥 toggle panel
@@ -297,7 +311,8 @@ function loadGallery() {
                 card.className = "card shadow-sm border-0 h-100";
 
                 let img = document.createElement("img");
-                img.src = getImagePath(item.file);
+                loadImageWithFallback(img, item.file);
+
                 img.className = "card-img-top";
                 img.onclick = () => openViewer(index);
 
@@ -332,7 +347,7 @@ function updateViewer() {
     let langs = getSelectedLanguages();
     let name = langs.map(l => item.answers[l]).filter(Boolean).join(" / ");
 
-    viewerImg.src = getImagePath(item.file);
+    loadImageWithFallback(viewerImg, item.file);
     viewerText.innerText = name;
 }
 
