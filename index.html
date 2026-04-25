@@ -64,9 +64,24 @@ body {
 <script src="js/bootstrap.bundle.min.js"></script>
 
 <script>
+
+// 🔥 حل ذكي للمسارات (محلي + GitHub)
 function goToGame(page) {
-    window.location.href = page;
+
+    let basePath = "";
+
+    // إذا كان على GitHub Pages
+    if (window.location.hostname.includes("github.io")) {
+
+        // إذا لم نكن داخل htdocs نضيفه
+        if (!window.location.pathname.includes("/htdocs/")) {
+            basePath = "htdocs/";
+        }
+    }
+
+    window.location.href = basePath + page;
 }
+
 </script>
 
 </body>
