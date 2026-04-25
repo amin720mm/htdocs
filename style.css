@@ -1,0 +1,72 @@
+/* style.css */
+
+body {
+    margin: 0;
+    font-family: Arial;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    display: flex;
+    justify-content: center;
+}
+
+.app {
+    width: 100%;
+    max-width: 400px;
+    min-height: 100vh;
+    background: white;
+    border-radius: 20px;
+    padding: 15px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+h2 {
+    margin: 10px 0;
+}
+
+select, button {
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    font-size: 16px;
+}
+
+.start-btn {
+    background: #4caf50;
+    color: white;
+    width: 100%;
+    margin-top: 10px;
+}
+
+#nextBtn {
+    background: #2196f3;
+    color: white;
+    width: 100%;
+    margin-top: 10px;
+}
+
+img {
+    width: 100%;
+    border-radius: 15px;
+    margin-top: 15px;
+}
+
+.choice {
+    width: 100%;
+    margin: 8px 0;
+    background: #eee;
+}
+
+.choice:hover {
+    background: #ddd;
+}
+
+#result {
+    font-size: 20px;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+#score {
+    margin-top: 10px;
+    font-weight: bold;
+}

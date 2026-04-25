@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لعبة الكتابة</title>
+
+<link rel="stylesheet" href="css/bootstrap.min.css">
+
+<style>
+body { 
+    background:#f8f9fa; 
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+/* Navbar */
+.navbar {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+/* Panel */
+.control-panel { transition: 0.3s; }
+.control-panel.hidden { display:none; }
+
+/* صورة */
+.game-img {
+    width:100%;
+    max-width:300px;
+    aspect-ratio:1/1;
+    object-fit:cover;
+    border-radius:15px;
+    margin:auto;
+    display:block;
+}
+
+/* نتيجة */
+#result {
+    font-weight:bold;
+    margin-top:10px;
+    text-align:center;
+}
+
+/* كارد */
+.card {
+    border-radius:15px;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-dark px-3 shadow">
+    <span id="title" class="navbar-brand fw-bold">⌨️ لعبة الكتابة</span>
+    <button class="btn btn-light btn-sm" onclick="togglePanel()">⚙️</button>
+</nav>
+
+<!-- Panel -->
+<div id="panel" class="control-panel container py-3">
+
+    <!-- بحث -->
+    <div class="card p-2 mb-2 shadow-sm">
+        <div class="d-flex gap-2">
+            <input type="text" id="search" class="form-control"
+                   placeholder="🔎 ابحث..." oninput="loadFilteredData()">
+            <button id="backBtn" class="btn btn-outline-secondary" onclick="goBack()">⬅</button>
+        </div>
+    </div>
+
+    <!-- اللغات -->
+    <div class="card p-2 mb-2 shadow-sm">
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+            <label><input type="radio" name="lang" value="ar"> عربي</label>
+            <label><input type="radio" name="lang" value="fr"> Français</label>
+            <label><input type="radio" name="lang" value="en"> English</label>
+            <label><input type="radio" name="lang" value="nl"> Nederlands</label>
+            <label><input type="radio" name="lang" value="de"> Deutsch</label>
+        </div>
+    </div>
+
+</div>
+
+<!-- اللعبة -->
+<div class="container py-4">
+<div class="card shadow p-3">
+
+<h4 id="gameTitle" class="text-center mb-3">⌨️ اكتب اسم الصورة</h4>
+
+<!-- 🔥 الفئات (ديناميكية الآن) -->
+<select id="category" class="form-select mb-3"></select>
+
+<button id="startBtn" class="btn btn-success w-100 mb-3" onclick="startGame()">
+ابدأ ▶
+</button>
+
+<p id="score" class="text-center fw-bold">النقاط: 0</p>
+
+<img id="image" class="game-img mb-2">
+
+<p id="hint" class="text-center text-muted"></p>
+
+<input type="text" id="answer" class="form-control text-center"
+placeholder="اكتب الإجابة هنا">
+
+<button class="btn btn-primary w-100 mt-2" onclick="checkAnswer()">تحقق ✔</button>
+
+<p id="result"></p>
+
+<button id="nextBtn" class="btn btn-info w-100 mt-2 d-none" onclick="startGame()">
+السؤال التالي ▶
+</button>
+
+<button id="backBtn2" class="btn btn-outline-secondary w-100 mt-3" onclick="goBack()">
+⬅ الرجوع
+</button>
+
+</div>
+</div>
+
+<script src="data.js"></script>
+
+<script>
+
+// 🌍 ترجمة (بدون تغيير)
+const translations = {
+    ar:{title:"⌨️ لعبة الكتابة",start:"ابدأ ▶",next:"السؤال التالي ▶",score:"النقاط",back:"⬅ الرجوع",search:"🔎 ابحث..."},
+    fr:{title:"⌨️ Jeu d'écriture",start:"Commencer ▶",next:"Suivant ▶",score:"Score",back:"⬅ Retour",search:"🔎 Rechercher..."},
+    en:{title:"⌨️ Writing Game",start:"Start ▶",next:"Next ▶",score:"Score",back:"⬅ Back",search:"🔎 Search..."}
+};
+
+function saveLanguage(lang){localStorage.setItem("lang",lang);}
+
+function loadLanguage(){
+    let saved=localStorage.getItem("lang")||"ar";
+    document.querySelector(`input[name="lang"][value="${saved}"]`).checked=true;
+    applyTranslation(saved);
+}
+
+function applyTranslation(lang){
+    let t=translations[lang]||translations.ar;
+    document.getElementById("title").innerText=t.title;
+    document.getElementById("gameTitle").innerText=t.title;
+    document.getElementById("startBtn").innerText=t.start;
+    document.getElementById("nextBtn").innerText=t.next;
+    document.getElementById("backBtn").innerText=t.back;
+    document.getElementById("backBtn2").innerText=t.back;
+    document.getElementById("search").placeholder=t.search;
+    document.getElementById("score").innerText=t.score+": "+score;
+}
+
+document.querySelectorAll("input[name='lang']").forEach(r=>{
+    r.onchange=e=>{
+        saveLanguage(e.target.value);
+        applyTranslation(e.target.value);
+    };
+});
+
+function togglePanel(){
+    document.getElementById("panel").classList.toggle("hidden");
+}
+
+// Game
+let data=imagesData;
+let filteredData=data;
+let current;
+let correctAnswer;
+let score=0;
+
+// 🔥 توليد الفئات تلقائيا
+function loadCategories(){
+    let select=document.getElementById("category");
+    select.innerHTML="";
+
+    let optionAll=document.createElement("option");
+    optionAll.value="all";
+    optionAll.textContent="كل الفئات";
+    select.appendChild(optionAll);
+
+    let categories=[];
+
+    data.forEach(item=>{
+        let cat=item.category.trim();
+        if(cat && !categories.includes(cat)){
+            categories.push(cat);
+        }
+    });
+
+    categories.forEach(cat=>{
+        let opt=document.createElement("option");
+        opt.value=cat;
+        opt.textContent=cat;
+        select.appendChild(opt);
+    });
+}
+
+// فلترة
+function loadFilteredData(){
+    let search=document.getElementById("search").value.toLowerCase();
+    let lang=document.querySelector("input[name='lang']:checked").value;
+
+    filteredData=data.filter(item=>{
+        let name=item.answers[lang]||"";
+        return name.toLowerCase().includes(search);
+    });
+}
+
+// بدء
+function startGame(){
+
+    if(filteredData.length===0) filteredData=data;
+
+    let lang=document.querySelector("input[name='lang']:checked").value;
+    let category=document.getElementById("category").value;
+
+    let filtered = category==="all"
+        ? filteredData
+        : filteredData.filter(item=>item.category===category);
+
+    if(filtered.length===0){
+        alert("⚠ لا توجد صور");
+        return;
+    }
+
+    current=filtered[Math.floor(Math.random()*filtered.length)];
+
+    document.getElementById("image").src="images/"+current.file;
+    correctAnswer=current.answers[lang]||"";
+
+    document.getElementById("hint").innerText="عدد الحروف: "+correctAnswer.length;
+
+    document.getElementById("answer").value="";
+    document.getElementById("result").innerText="";
+    document.getElementById("nextBtn").classList.add("d-none");
+}
+
+// خوارزمية (بدون تغيير)
+function levenshtein(a,b){
+    let m=[];
+    for(let i=0;i<=b.length;i++)m[i]=[i];
+    for(let j=0;j<=a.length;j++)m[0][j]=j;
+
+    for(let i=1;i<=b.length;i++){
+        for(let j=1;j<=a.length;j++){
+            m[i][j]=b[i-1]===a[j-1]?
+            m[i-1][j-1]:
+            Math.min(m[i-1][j-1]+1,m[i][j-1]+1,m[i-1][j]+1);
+        }
+    }
+    return m[b.length][a.length];
+}
+
+// تحقق (بدون تغيير)
+function checkAnswer(){
+
+    let user=document.getElementById("answer").value.trim().toLowerCase();
+    let correct=(correctAnswer||"").toLowerCase();
+    let result=document.getElementById("result");
+
+    let distance=levenshtein(user,correct);
+
+    if(distance===0){
+        result.innerText="✅ صحيح!";
+        result.className="text-success text-center";
+        score++;
+        document.getElementById("nextBtn").classList.remove("d-none");
+    }
+    else if(distance<=2){
+        result.innerText="🟡 قريب جدًا!";
+        result.className="text-warning text-center";
+    }
+    else{
+        result.innerText="❌ خطأ! الإجابة: "+correctAnswer;
+        result.className="text-danger text-center";
+    }
+
+    let lang=document.querySelector("input[name='lang']:checked").value;
+    applyTranslation(lang);
+}
+
+function goBack(){
+    window.location.href="index.html";
+}
+
+window.onload=()=>{
+    loadLanguage();
+    loadCategories(); // 🔥 مهم جدا
+    loadFilteredData();
+};
+
+</script>
+
+</body>
+</html>

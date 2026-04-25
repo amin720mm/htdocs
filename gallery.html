@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>معرض الصور</title>
+
+<link rel="stylesheet" href="css/bootstrap.min.css">
+
+<style>
+body { 
+    background:#f8f9fa; 
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+/* Navbar */
+.navbar {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+/* Panel */
+.control-panel {
+    transition: 0.3s;
+}
+.control-panel.hidden {
+    display: none;
+}
+
+/* الصور */
+.card img { cursor:pointer; }
+.card-img-top {
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.card-img-top:hover {
+    transform: scale(1.05);
+}
+
+.card-body {
+    font-size: 14px;
+    color: #333;
+}
+
+/* أزرار */
+.btn {
+    border-radius: 10px;
+    transition: 0.2s;
+}
+.btn:hover {
+    transform: scale(1.05);
+}
+
+/* Viewer */
+.viewer {
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:black;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+    animation: fadeIn 0.3s;
+}
+.viewer.hidden { display:none; }
+
+.viewer img {
+    max-width:90%;
+    max-height:70%;
+    transition: transform 0.2s;
+    touch-action: none;
+    animation: zoomIn 0.3s ease;
+}
+
+#viewerText {
+    color:white;
+    margin-top:10px;
+    font-size:18px;
+    font-weight:bold;
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.8); opacity:0; }
+    to { transform: scale(1); opacity:1; }
+}
+@keyframes fadeIn {
+    from {opacity:0;}
+    to {opacity:1;}
+}
+
+/* النص */
+.text-style {
+    transition: 0.2s;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🔥 Navbar -->
+<nav class="navbar navbar-dark px-3 shadow">
+    <span class="navbar-brand fw-bold">🖼️ لعبة تخمين الصور</span>
+    <button class="btn btn-light btn-sm" onclick="togglePanel()">⚙️</button>
+</nav>
+
+<!-- 🔥 Panel -->
+<div id="panel" class="control-panel container py-3">
+
+    <!-- البحث -->
+    <div class="card p-2 mb-2 shadow-sm">
+        <div class="d-flex gap-2">
+            <input type="text" id="search" class="form-control"
+                   placeholder="🔎 ابحث..." oninput="loadGallery()">
+            <button class="btn btn-outline-secondary" onclick="goBack()">⬅</button>
+        </div>
+    </div>
+
+    <!-- التحكم -->
+    <div class="card p-2 mb-2 shadow-sm">
+        <div class="d-flex flex-wrap gap-2 justify-content-center">
+
+            <select id="fontSelect" class="form-select form-select-sm" style="width:auto">
+                <option value="default">الخط</option>
+                <option value="arial">Arial</option>
+                <option value="tahoma">Tahoma</option>
+                <option value="monospace">Mono</option>
+            </select>
+
+            <select id="sizeSelect" class="form-select form-select-sm" style="width:auto">
+                <option value="14">صغير</option>
+                <option value="16" selected>متوسط</option>
+                <option value="20">كبير</option>
+            </select>
+
+            <input type="color" id="colorPicker" style="width:40px;height:35px">
+
+            <button class="btn btn-sm btn-outline-dark" onclick="toggleBold()">B</button>
+            <button class="btn btn-sm btn-outline-dark" onclick="toggleItalic()">I</button>
+
+            <button class="btn btn-sm btn-outline-primary" onclick="setAlign('left')">يسار</button>
+            <button class="btn btn-sm btn-outline-primary" onclick="setAlign('center')">وسط</button>
+            <button class="btn btn-sm btn-outline-primary" onclick="setAlign('right')">يمين</button>
+
+        </div>
+    </div>
+
+    <!-- اللغات -->
+    <div class="card p-2 mb-2 shadow-sm">
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+            <label><input type="checkbox" value="ar" checked onchange="loadGallery()"> عربي</label>
+            <label><input type="checkbox" value="fr" onchange="loadGallery()"> Français</label>
+            <label><input type="checkbox" value="en" onchange="loadGallery()"> English</label>
+            <label><input type="checkbox" value="nl" checked onchange="loadGallery()"> Nederlands</label>
+            <label><input type="checkbox" value="de" onchange="loadGallery()"> Deutsch</label>
+        </div>
+    </div>
+
+    <!-- الفئات -->
+    <select id="category" class="form-select mb-3 shadow-sm" onchange="loadGallery()"></select>
+
+</div>
+
+<!-- المعرض -->
+<div class="container">
+    <div class="row g-3" id="gallery"></div>
+</div>
+
+<!-- رجوع -->
+<div class="container">
+    <button class="btn btn-outline-secondary w-100 mt-3" onclick="goBack()">⬅ الرجوع</button>
+</div>
+
+<!-- Viewer -->
+<div id="viewer" class="viewer hidden">
+    <img id="viewerImg">
+    <div id="viewerText"></div>
+</div>
+
+<script src="data.js?v=999"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+// 🔥 toggle panel
+function togglePanel(){
+    document.getElementById("panel").classList.toggle("hidden");
+}
+
+let currentIndex = 0;
+let viewer = document.getElementById("viewer");
+let viewerImg = document.getElementById("viewerImg");
+let viewerText = document.getElementById("viewerText");
+
+function getSelectedLanguages() {
+    return Array.from(document.querySelectorAll("input[type=checkbox]:checked"))
+           .map(cb => cb.value);
+}
+
+function loadCategories() {
+    const select = document.getElementById("category");
+    select.innerHTML = "";
+
+    let optionAll = document.createElement("option");
+    optionAll.value = "all";
+    optionAll.textContent = "كل الفئات";
+    select.appendChild(optionAll);
+
+    let categories = [];
+
+    imagesData.forEach(item => {
+        let cat = item.category.trim();
+        if (cat && !categories.includes(cat)) {
+            categories.push(cat);
+        }
+    });
+
+    categories.forEach(cat => {
+        let option = document.createElement("option");
+        option.value = cat;
+        option.textContent = cat;
+        select.appendChild(option);
+    });
+
+    select.value = "all";
+}
+
+let currentStyle = {
+    font: "default",
+    size: "16",
+    color: "#000000",
+    bold: false,
+    italic: false,
+    align: "center"
+};
+
+function applyStyle() {
+    let elements = document.querySelectorAll(".text-style");
+
+    elements.forEach(el => {
+        el.style.fontSize = currentStyle.size + "px";
+        el.style.color = currentStyle.color;
+        el.style.fontWeight = currentStyle.bold ? "bold" : "normal";
+        el.style.fontStyle = currentStyle.italic ? "italic" : "normal";
+        el.style.textAlign = currentStyle.align;
+
+        switch(currentStyle.font){
+            case "arial": el.style.fontFamily = "Arial"; break;
+            case "tahoma": el.style.fontFamily = "Tahoma"; break;
+            case "monospace": el.style.fontFamily = "monospace"; break;
+            default: el.style.fontFamily = "";
+        }
+    });
+}
+
+document.getElementById("fontSelect").onchange = e => { currentStyle.font = e.target.value; applyStyle(); };
+document.getElementById("sizeSelect").onchange = e => { currentStyle.size = e.target.value; applyStyle(); };
+document.getElementById("colorPicker").oninput = e => { currentStyle.color = e.target.value; applyStyle(); };
+
+function toggleBold(){ currentStyle.bold = !currentStyle.bold; applyStyle(); }
+function toggleItalic(){ currentStyle.italic = !currentStyle.italic; applyStyle(); }
+function setAlign(val){ currentStyle.align = val; applyStyle(); }
+
+function loadGallery() {
+
+    let langs = getSelectedLanguages();
+    let search = document.getElementById("search").value.toLowerCase();
+    let category = document.getElementById("category").value || "all";
+
+    let gallery = document.getElementById("gallery");
+    gallery.innerHTML = "";
+
+    imagesData.forEach((item, index) => {
+
+        let name = langs.map(l => item.answers[l]).filter(Boolean).join(" / ");
+
+        if (!search || name.toLowerCase().includes(search)) {
+
+            if (category === "all" || item.category.trim() === category) {
+
+                let col = document.createElement("div");
+                col.className = "col-6 col-md-4";
+
+                let card = document.createElement("div");
+                card.className = "card shadow-sm border-0 h-100";
+
+                let img = document.createElement("img");
+                img.src = "images/" + item.file;
+                img.className = "card-img-top";
+                img.onclick = () => openViewer(index);
+
+                let body = document.createElement("div");
+                body.className = "card-body text-center p-2";
+
+                let title = document.createElement("div");
+                title.innerText = name;
+                title.className = "text-style";
+
+                body.appendChild(title);
+                card.appendChild(img);
+                card.appendChild(body);
+                col.appendChild(card);
+
+                gallery.appendChild(col);
+            }
+        }
+    });
+
+    applyStyle();
+}
+
+function openViewer(index) {
+    currentIndex = index;
+    updateViewer();
+    viewer.classList.remove("hidden");
+}
+
+function updateViewer() {
+    let item = imagesData[currentIndex];
+    let langs = getSelectedLanguages();
+    let name = langs.map(l => item.answers[l]).filter(Boolean).join(" / ");
+
+    viewerImg.src = "images/" + item.file;
+    viewerText.innerText = name;
+}
+
+viewer.onclick = () => viewer.classList.add("hidden");
+
+function goBack() {
+    window.location.href = "index.html";
+}
+
+window.onload = () => {
+    loadCategories();
+    loadGallery();
+};
+</script>
+
+</body>
+</html>

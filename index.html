@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الدراسة</title>
+
+<link rel="stylesheet" href="css/bootstrap.min.css">
+
+<style>
+body {
+    background: linear-gradient(135deg, #0d6efd, #6f42c1);
+    min-height: 100vh;
+}
+
+.card {
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+</style>
+
+</head>
+
+<body class="d-flex align-items-center justify-content-center">
+
+<div class="container text-center">
+
+<h2 class="text-white mb-4">إختر التطبيق المناسب</h2>
+
+<div class="row g-3">
+
+<!-- 🖼️ معرض -->
+<div class="col-12">
+    <div class="card shadow-lg p-3 border-0" onclick="goToGame('gallery.html')">
+        <h4>🖼️ عرض كل الصور</h4>
+        <p class="text-muted">استكشف جميع الصور</p>
+    </div>
+</div>
+
+<!-- ⌨️ كتابة -->
+<div class="col-6">
+    <div class="card shadow p-3 border-0" onclick="goToGame('game2.html')">
+        <h5>⌨️ الكتابة</h5>
+        <small class="text-muted">اختبر مهارتك</small>
+    </div>
+</div>
+
+<!-- 🖼️ الصور -->
+<div class="col-6">
+    <div class="card shadow p-3 border-0" onclick="goToGame('game1.html')">
+        <h5>🖼️ الصور</h5>
+        <small class="text-muted">تعلم بالصور</small>
+    </div>
+</div>
+
+</div>
+
+</div>
+
+<script src="js/bootstrap.bundle.min.js"></script>
+
+<script>
+function goToGame(page) {
+    window.location.href = page;
+}
+</script>
+
+</body>
+</html>

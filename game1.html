@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لعبة الصور</title>
+
+<link rel="stylesheet" href="css/bootstrap.min.css">
+
+<style>
+body { 
+    background:#f8f9fa; 
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+/* Navbar */
+.navbar {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+/* Panel */
+.control-panel { transition: 0.3s; }
+.control-panel.hidden { display:none; }
+
+/* صورة */
+.game-img {
+    width:100%;
+    max-width:300px;
+    aspect-ratio:1/1;
+    object-fit:cover;
+    border-radius:15px;
+    display:block;
+    margin:auto;
+    transition:0.3s;
+}
+.game-img:hover { transform:scale(1.05); }
+
+/* أزرار */
+.btn {
+    border-radius:10px;
+    transition:0.2s;
+}
+.btn:hover { transform:scale(1.05); }
+
+/* اختيارات */
+.choice {
+    width:100%;
+    border-radius:10px;
+}
+
+/* النص */
+.text-style { transition:0.2s; }
+
+/* نتيجة */
+#result {
+    font-weight:bold;
+    text-align:center;
+    margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-dark px-3 shadow">
+    <span id="title" class="navbar-brand fw-bold">🖼️ لعبة تخمين الصور</span>
+    <button class="btn btn-light btn-sm" onclick="togglePanel()">⚙️</button>
+</nav>
+
+<!-- Panel -->
+<div id="panel" class="control-panel container py-3">
+
+    <div class="card p-2 mb-2 shadow-sm">
+        <div class="d-flex gap-2">
+            <input type="text" id="search" class="form-control"
+                   placeholder="🔎 ابحث..." oninput="loadFilteredData()">
+            <button id="backBtn" class="btn btn-outline-secondary" onclick="goBack()">⬅</button>
+        </div>
+    </div>
+
+    <div class="card p-2 mb-2 shadow-sm">
+        <div class="d-flex flex-wrap gap-2 justify-content-center">
+
+            <select id="fontSelect" class="form-select form-select-sm" style="width:auto">
+                <option value="default">الخط</option>
+                <option value="arial">Arial</option>
+                <option value="tahoma">Tahoma</option>
+                <option value="monospace">Mono</option>
+            </select>
+
+            <select id="sizeSelect" class="form-select form-select-sm" style="width:auto">
+                <option value="14">صغير</option>
+                <option value="16" selected>متوسط</option>
+                <option value="20">كبير</option>
+            </select>
+
+            <input type="color" id="colorPicker" style="width:40px;height:35px">
+
+            <button class="btn btn-sm btn-outline-dark" onclick="toggleBold()">B</button>
+            <button class="btn btn-sm btn-outline-dark" onclick="toggleItalic()">I</button>
+
+            <button class="btn btn-sm btn-outline-primary" onclick="setAlign('left')">يسار</button>
+            <button class="btn btn-sm btn-outline-primary" onclick="setAlign('center')">وسط</button>
+            <button class="btn btn-sm btn-outline-primary" onclick="setAlign('right')">يمين</button>
+
+        </div>
+    </div>
+
+    <!-- اللغات -->
+    <div class="card p-2 mb-2 shadow-sm">
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+
+            <label><input type="radio" name="lang" value="ar"> عربي</label>
+            <label><input type="radio" name="lang" value="fr"> Français</label>
+            <label><input type="radio" name="lang" value="en"> English</label>
+            <label><input type="radio" name="lang" value="nl"> Nederlands</label>
+            <label><input type="radio" name="lang" value="de"> Deutsch</label>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- اللعبة -->
+<div class="container py-4">
+<div class="card shadow p-3">
+
+<h4 id="gameTitle" class="text-center mb-3 text-style">🎮 لعبة تخمين الصور</h4>
+
+<button id="startBtn" class="btn btn-success w-100 mb-3" onclick="startGame()">ابدأ ▶</button>
+
+<p id="score" class="text-center fw-bold text-style">النقاط: 0</p>
+
+<img id="image" class="game-img mb-2">
+
+<p id="hint" class="text-center text-muted text-style"></p>
+
+<div id="choices" class="d-grid gap-2"></div>
+
+<p id="result"></p>
+
+<button id="nextBtn" class="btn btn-info w-100 mt-2 d-none"
+onclick="startGame()">
+السؤال التالي ▶
+</button>
+
+<button id="backBtn2" class="btn btn-outline-secondary w-100 mt-3" onclick="goBack()">⬅ الرجوع</button>
+
+</div>
+</div>
+
+<script src="data.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+// 🌍 ترجمة
+const translations = {
+    ar: {
+        title:"🖼️ لعبة تخمين الصور",
+        start:"ابدأ ▶",
+        next:"السؤال التالي ▶",
+        score:"النقاط",
+        back:"⬅ الرجوع",
+        search:"🔎 ابحث..."
+    },
+    fr: {
+        title:"🖼️ Jeu d'images",
+        start:"Commencer ▶",
+        next:"Suivant ▶",
+        score:"Score",
+        back:"⬅ Retour",
+        search:"🔎 Rechercher..."
+    },
+    en: {
+        title:"🖼️ Image Game",
+        start:"Start ▶",
+        next:"Next ▶",
+        score:"Score",
+        back:"⬅ Back",
+        search:"🔎 Search..."
+    }
+};
+
+// 💾 حفظ اللغة
+function saveLanguage(lang){
+    localStorage.setItem("lang", lang);
+}
+
+// 📥 تحميل اللغة
+function loadLanguage(){
+    let saved = localStorage.getItem("lang") || "ar";
+    document.querySelector(`input[name="lang"][value="${saved}"]`).checked = true;
+    applyTranslation(saved);
+}
+
+// 🌍 تطبيق الترجمة
+function applyTranslation(lang){
+    let t = translations[lang] || translations["ar"];
+
+    document.getElementById("title").innerText = t.title;
+    document.getElementById("gameTitle").innerText = t.title;
+    document.getElementById("startBtn").innerText = t.start;
+    document.getElementById("nextBtn").innerText = t.next;
+    document.getElementById("backBtn").innerText = t.back;
+    document.getElementById("backBtn2").innerText = t.back;
+    document.getElementById("search").placeholder = t.search;
+
+    document.getElementById("score").innerText = t.score + ": " + score;
+}
+
+// تغيير اللغة
+document.querySelectorAll("input[name='lang']").forEach(radio=>{
+    radio.addEventListener("change", e=>{
+        saveLanguage(e.target.value);
+        applyTranslation(e.target.value);
+    });
+});
+
+// Panel
+function togglePanel(){
+    document.getElementById("panel").classList.toggle("hidden");
+}
+
+// Game (بدون تغيير)
+let data = imagesData;
+let filteredData = data;
+let current;
+let correctAnswer;
+let score = 0;
+
+let correctSound = new Audio("sounds/correct.mp3");
+let wrongSound = new Audio("sounds/wrong.mp3");
+
+function loadFilteredData(){
+    let search = document.getElementById("search").value.toLowerCase();
+    let lang = document.querySelector("input[name='lang']:checked").value;
+
+    filteredData = data.filter(item=>{
+        let name = item.answers[lang] || "";
+        return name.toLowerCase().includes(search);
+    });
+}
+
+function startGame(){
+
+    if(filteredData.length===0) filteredData=data;
+
+    let lang = document.querySelector("input[name='lang']:checked").value;
+
+    current = filteredData[Math.floor(Math.random()*filteredData.length)];
+
+    document.getElementById("image").src = "images/" + current.file;
+
+    correctAnswer = current.answers[lang] || "";
+
+    document.getElementById("hint").innerText =
+        "عدد الحروف: " + correctAnswer.length;
+
+    generateChoices(lang);
+
+    document.getElementById("result").innerText = "";
+    document.getElementById("nextBtn").classList.add("d-none");
+}
+
+function generateChoices(lang){
+    let div = document.getElementById("choices");
+    div.innerHTML="";
+
+    let answers=[correctAnswer];
+
+    while(answers.length<3){
+        let r = data[Math.floor(Math.random()*data.length)].answers[lang];
+        if(r && !answers.includes(r)) answers.push(r);
+    }
+
+    answers.sort(()=>Math.random()-0.5);
+
+    answers.forEach(ans=>{
+        let btn=document.createElement("button");
+        btn.className="btn btn-outline-primary choice text-style";
+        btn.innerText=ans;
+        btn.onclick=()=>checkAnswer(ans);
+        div.appendChild(btn);
+    });
+}
+
+function checkAnswer(selected){
+    let result=document.getElementById("result");
+    let buttons=document.querySelectorAll(".choice");
+
+    buttons.forEach(btn=>{
+        btn.disabled=true;
+
+        if(btn.innerText === correctAnswer){
+            btn.classList.remove("btn-outline-primary");
+            btn.classList.add("btn-success");
+        }
+
+        if(btn.innerText === selected && selected !== correctAnswer){
+            btn.classList.remove("btn-outline-primary");
+            btn.classList.add("btn-danger");
+        }
+    });
+
+    if(selected===correctAnswer){
+        result.innerText="✅ صحيح!";
+        result.className="text-success";
+        correctSound.play();
+        score++;
+    }else{
+        result.innerText="❌ خطأ!";
+        result.className="text-danger";
+        wrongSound.play();
+    }
+
+    let lang = document.querySelector("input[name='lang']:checked").value;
+    applyTranslation(lang);
+
+    document.getElementById("nextBtn").classList.remove("d-none");
+}
+
+function goBack(){
+    window.location.href="index.html";
+}
+
+window.onload=()=>{
+    loadLanguage();
+    loadFilteredData();
+};
+
+</script>
+
+</body>
+</html>
