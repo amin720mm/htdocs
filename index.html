@@ -133,7 +133,6 @@ body {
     <img src="images/Logo.JPG" class="splash-logo">
     <div class="splash-text">MANAI</div>
 
-    <!-- 🔥 Loading -->
     <div class="loader">
         <div class="loader-bar"></div>
     </div>
@@ -141,7 +140,6 @@ body {
 
 <div class="container text-center">
 
-<!-- 🌍 اختيار اللغة -->
 <div class="mb-3 text-white">
     <label class="me-2"><input type="radio" name="lang" value="fr"> Français</label>
     <label class="me-2"><input type="radio" name="lang" value="ar"> عربي</label>
@@ -163,25 +161,27 @@ body {
 <div class="col-6">
     <div class="card shadow p-3 border-0" onclick="goToGame('game2.html')">
         <h5 id="writeTitle">⌨️ الكتابة</h5>
-        <small id="writeDesc" class="text-muted">اختبر مهارتك</small>
+        <small id="writeDesc">اختبر مهارتك</small>
     </div>
 </div>
 
 <div class="col-6">
     <div class="card shadow p-3 border-0" onclick="goToGame('game1.html')">
         <h5 id="imageTitle">🖼️ الصور</h5>
-        <small id="imageDesc" class="text-muted">تعلم بالصور</small>
+        <small id="imageDesc">تعلم بالصور</small>
     </div>
 </div>
 
 </div>
 
-<!-- Footer -->
+<!-- 🔥 Footer مترجم -->
 <div class="footer-box mt-4">
-<p>📚 موقع تعليمي غير ربحي ومفتوح للجميع</p>
-<p>🌍 مشروع مفتوح المصدر</p>
+<p id="about1"></p>
+<p id="about2"></p>
+<p id="about3"></p>
+<p id="about4"></p>
 <div class="signature">المبرمج المناعي — Manai / Manaï</div>
-<p class="footer-end">✨ من أجل حياة أفضل</p>
+<p id="about5" class="footer-end"></p>
 </div>
 
 </div>
@@ -190,113 +190,125 @@ body {
 
 <script>
 
-// 🔥 إخفاء Splash بعد انتهاء التحميل
+// Splash
 window.addEventListener("load", () => {
     setTimeout(()=>{
         document.getElementById("splash").style.display = "none";
     },3000);
 });
 
-// باقي كودك بدون حذف 👇
-
-// 🌍 الترجمات
+// 🌍 الترجمات (🔥 تمت إضافة about)
 const translations = {
-    fr: {
+    fr:{
         title:"Choisissez l'application",
         gallery:"🖼️ Voir toutes les images",
         galleryDesc:"Explorer toutes les images",
         write:"⌨️ Écriture",
         writeDesc:"Testez vos compétences",
         image:"🖼️ Images",
-        imageDesc:"Apprendre avec les images"
+        imageDesc:"Apprendre avec les images",
+        about1:"📚 Plateforme éducative gratuite",
+        about2:"Créée comme hobby pour apprendre les langues",
+        about3:"🌍 Projet open source",
+        about4:"🤝 Le savoir pour tous",
+        about5:"✨ Pour une vie meilleure"
     },
-    ar: {
+    ar:{
         title:"إختر التطبيق المناسب",
         gallery:"🖼️ عرض كل الصور",
         galleryDesc:"استكشف جميع الصور",
         write:"⌨️ الكتابة",
         writeDesc:"اختبر مهارتك",
         image:"🖼️ الصور",
-        imageDesc:"تعلم بالصور"
+        imageDesc:"تعلم بالصور",
+        about1:"📚 موقع تعليمي غير ربحي",
+        about2:"تم إنشاؤه كهواية لتعلم اللغات",
+        about3:"🌍 مشروع مفتوح المصدر",
+        about4:"🤝 المعرفة للجميع",
+        about5:"✨ من أجل حياة أفضل"
     },
-    en: {
+    en:{
         title:"Choose the application",
         gallery:"🖼️ View all images",
         galleryDesc:"Explore all images",
         write:"⌨️ Writing",
         writeDesc:"Test your skills",
         image:"🖼️ Images",
-        imageDesc:"Learn with images"
+        imageDesc:"Learn with images",
+        about1:"📚 Non-profit educational platform",
+        about2:"Created as a hobby to learn languages",
+        about3:"🌍 Open source project",
+        about4:"🤝 Knowledge for everyone",
+        about5:"✨ For a better life"
     },
-    nl: {
+    nl:{
         title:"Kies de applicatie",
         gallery:"🖼️ Bekijk alle afbeeldingen",
         galleryDesc:"Verken alle afbeeldingen",
         write:"⌨️ Schrijven",
         writeDesc:"Test je vaardigheden",
         image:"🖼️ Afbeeldingen",
-        imageDesc:"Leren met afbeeldingen"
+        imageDesc:"Leren met afbeeldingen",
+        about1:"📚 Gratis educatief platform",
+        about2:"Gemaakt als hobby om talen te leren",
+        about3:"🌍 Open source project",
+        about4:"🤝 Kennis voor iedereen",
+        about5:"✨ Voor een beter leven"
     }
 };
 
-// حفظ اللغة
-function saveLanguage(lang){
-    localStorage.setItem("lang", lang);
-}
-
-// جلب اللغة
+// اللغة
 function getLanguage(){
     return localStorage.getItem("lang") || "fr";
 }
 
-// تحميل اللغة
-function loadLanguage(){
-    let lang = getLanguage();
-
-    document.documentElement.lang = lang;
-    document.body.dir = (lang === "ar") ? "rtl" : "ltr";
-
-    document.querySelector(`input[name="lang"][value="${lang}"]`).checked = true;
-    applyTranslation(lang);
+function saveLanguage(lang){
+    localStorage.setItem("lang", lang);
 }
 
-// تطبيق الترجمة
+// تطبيق
 function applyTranslation(lang){
     let t = translations[lang];
 
-    document.getElementById("title").innerText = t.title;
-    document.getElementById("galleryTitle").innerText = t.gallery;
-    document.getElementById("galleryDesc").innerText = t.galleryDesc;
-    document.getElementById("writeTitle").innerText = t.write;
-    document.getElementById("writeDesc").innerText = t.writeDesc;
-    document.getElementById("imageTitle").innerText = t.image;
-    document.getElementById("imageDesc").innerText = t.imageDesc;
+    document.documentElement.lang = lang;
+    document.body.dir = (lang==="ar")?"rtl":"ltr";
+
+    document.getElementById("title").innerText=t.title;
+    document.getElementById("galleryTitle").innerText=t.gallery;
+    document.getElementById("galleryDesc").innerText=t.galleryDesc;
+    document.getElementById("writeTitle").innerText=t.write;
+    document.getElementById("writeDesc").innerText=t.writeDesc;
+    document.getElementById("imageTitle").innerText=t.image;
+    document.getElementById("imageDesc").innerText=t.imageDesc;
+
+    document.getElementById("about1").innerText=t.about1;
+    document.getElementById("about2").innerText=t.about2;
+    document.getElementById("about3").innerText=t.about3;
+    document.getElementById("about4").innerText=t.about4;
+    document.getElementById("about5").innerText=t.about5;
 }
 
 // تغيير اللغة
-document.querySelectorAll("input[name='lang']").forEach(radio=>{
-    radio.addEventListener("change", e=>{
+document.querySelectorAll("input[name='lang']").forEach(r=>{
+    r.addEventListener("change",e=>{
         saveLanguage(e.target.value);
         applyTranslation(e.target.value);
     });
 });
 
-// التنقل
-function goToGame(page) {
-
-    let basePath = "";
-
-    if (window.location.hostname.includes("github.io")) {
-        if (!window.location.pathname.includes("/htdocs/")) {
-            basePath = "htdocs/";
-        }
-    }
-
-    window.location.href = basePath + page;
+// تحميل
+function loadLanguage(){
+    let lang=getLanguage();
+    document.querySelector(`input[value="${lang}"]`).checked=true;
+    applyTranslation(lang);
 }
 
-// تشغيل
-window.onload = loadLanguage;
+// تنقل
+function goToGame(page){
+    window.location.href=page;
+}
+
+window.onload=loadLanguage;
 
 </script>
 
