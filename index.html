@@ -12,27 +12,82 @@
 body {
     background: linear-gradient(135deg, #0d6efd, #6f42c1);
     min-height: 100vh;
+    transition: background 0.4s, color 0.4s;
 }
 
-/* 🔥 LOGO أعلى اليسار */
-.top-logo {
+/* 🌙 DARK MODE */
+.dark-mode {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: white;
+}
+
+/* 🔥 NAVBAR */
+.navbar-custom {
     position: fixed;
-    top: 15px;
-    left: 15px;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    z-index: 1000;
-
-    transition: all 0.3s ease;
+    top: 0;
+    width: 100%;
+    height: 65px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    z-index: 9999;
 }
 
-/* 🔥 تأثير hover */
-.top-logo:hover {
-    transform: scale(1.2);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+/* LOGO */
+.nav-logo {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+.nav-logo:hover {
+    transform: scale(1.15);
+}
+
+/* MENU BUTTON */
+.menu-btn {
+    font-size: 24px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: white;
+}
+
+/* DROPDOWN */
+.dropdown-menu-custom {
+    position: absolute;
+    top: 70px;
+    right: 15px;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.dropdown-menu-custom button {
+    display: block;
+    width: 100%;
+    margin: 5px 0;
+    background: none;
+    border: none;
+    color: white;
+    text-align: left;
+    cursor: pointer;
+}
+
+@keyframes fadeIn {
+    from {opacity:0; transform: translateY(-10px);}
+    to {opacity:1; transform: translateY(0);}
+}
+
+/* 🔥 LOGO القديم */
+.top-logo {
+    display: none;
 }
 
 /* الكروت */
@@ -72,7 +127,7 @@ body {
     transform: scale(1.05);
 }
 
-/* Footer VIP */
+/* Footer */
 .footer-box {
     margin-top: 40px;
     border-radius: 25px;
@@ -83,33 +138,28 @@ body {
     color: white;
 }
 
-.footer-box p {
-    margin: 6px 0;
-}
-
-.signature {
-    margin-top: 15px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255,255,255,0.3);
-    font-size: 14px;
-    opacity: 0.9;
-}
-
-.signature span {
-    font-weight: bold;
-    color: #ffd700;
-}
-
-.footer-end {
-    margin-top: 10px;
-    font-weight: bold;
-    color: #fff;
+/* SPACE FIX */
+body {
+    padding-top: 80px;
 }
 </style>
 
 </head>
 
 <body class="d-flex align-items-center justify-content-center">
+
+<!-- 🔥 NAVBAR -->
+<div class="navbar-custom">
+    <img src="images/logoproject.jpg" class="nav-logo">
+
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+    <div class="dropdown-menu-custom" id="menu">
+        <button onclick="toggleDark()">🌙 Dark / Light</button>
+        <button onclick="login()">👤 Login</button>
+        <button onclick="profile()">📁 Profile</button>
+    </div>
+</div>
 
 <img src="images/logoproject.jpg" class="top-logo">
 
@@ -149,17 +199,16 @@ body {
 
 </div>
 
-<!-- 🔥 Contact Section -->
+<!-- Contact -->
 <div class="contact-box">
     <h4 id="contactTitle">📩 تواصل معنا</h4>
     <p id="contactText">لأي اقتراح أو استفسار، يمكنك مراسلتنا عبر البريد الإلكتروني:</p>
-    <a href="mailto:mohamed.amin@themanai.com" id="contactEmail">
+    <a href="mailto:mohamed.amin@themanai.com">
         mohamed.amin@themanai.com
     </a>
 </div>
 
-<!-- 🔥 Footer -->
-
+<!-- Footer -->
 <div class="footer-box mt-4">
 <p id="about1"></p>
 <p id="about2"></p>
@@ -175,75 +224,30 @@ body {
 
 <script>
 
-// 🌍 الترجمات
-const translations = {
-    fr:{
-        title:"Choisissez l'application",
-        gallery:"🖼️ Voir toutes les images",
-        galleryDesc:"Explorer toutes les images",
-        write:"⌨️ Écriture",
-        writeDesc:"Testez vos compétences",
-        image:"🖼️ Images",
-        imageDesc:"Apprendre avec les images",
-        about1:"📚 Plateforme éducative gratuite",
-        about2:"Créée comme hobby pour apprendre les langues",
-        about3:"🌍 Projet open source",
-        about4:"🤝 Le savoir pour tous",
-        about5:"✨ Pour une vie meilleure",
-        contactTitle:"📩 Contactez-nous",
-        contactText:"Pour toute suggestion ou question, contactez-nous par email :"
-    },
-    ar:{
-        title:"إختر التطبيق المناسب",
-        gallery:"🖼️ عرض كل الصور",
-        galleryDesc:"استكشف جميع الصور",
-        write:"⌨️ الكتابة",
-        writeDesc:"اختبر مهارتك",
-        image:"🖼️ الصور",
-        imageDesc:"تعلم بالصور",
-        about1:"📚 موقع تعليمي غير ربحي",
-        about2:"تم إنشاؤه كهواية لتعلم اللغات",
-        about3:"🌍 مشروع مفتوح المصدر",
-        about4:"🤝 المعرفة للجميع",
-        about5:"✨ من أجل حياة أفضل",
-        contactTitle:"📩 تواصل معنا",
-        contactText:"لأي اقتراح أو استفسار، يمكنك مراسلتنا عبر البريد الإلكتروني:"
-    },
-    en:{
-        title:"Choose the application",
-        gallery:"🖼️ View all images",
-        galleryDesc:"Explore all images",
-        write:"⌨️ Writing",
-        writeDesc:"Test your skills",
-        image:"🖼️ Images",
-        imageDesc:"Learn with images",
-        about1:"📚 Non-profit educational platform",
-        about2:"Created as a hobby to learn languages",
-        about3:"🌍 Open source project",
-        about4:"🤝 Knowledge for everyone",
-        about5:"✨ For a better life",
-        contactTitle:"📩 Contact us",
-        contactText:"For any suggestion or question, email us at:"
-    },
-    nl:{
-        title:"Kies de applicatie",
-        gallery:"🖼️ Bekijk alle afbeeldingen",
-        galleryDesc:"Verken alle afbeeldingen",
-        write:"⌨️ Schrijven",
-        writeDesc:"Test je vaardigheden",
-        image:"🖼️ Afbeeldingen",
-        imageDesc:"Leren met afbeeldingen",
-        about1:"📚 Gratis educatief platform",
-        about2:"Gemaakt als hobby om talen te leren",
-        about3:"🌍 Open source project",
-        about4:"🤝 Kennis voor iedereen",
-        about5:"✨ Voor een beter leven",
-        contactTitle:"📩 Neem contact op",
-        contactText:"Voor vragen of suggesties, stuur een email naar:"
-    }
-};
+// 🔥 MENU
+function toggleMenu(){
+    let menu=document.getElementById("menu");
+    menu.style.display = (menu.style.display==="block")?"none":"block";
+}
 
-// اللغة
+// 🌙 DARK MODE
+function toggleDark(){
+    document.body.classList.toggle("dark-mode");
+}
+
+// 👤 LOGIN
+function login(){
+    alert("Login system later 🔐");
+}
+
+// 📁 PROFILE
+function profile(){
+    alert("Profile page later 👤");
+}
+
+// 🌍 الترجمات (كما هي بدون تغيير)
+const translations = { ... }; // (خليها كما هي عندك بدون تغيير)
+
 function getLanguage(){
     return localStorage.getItem("lang") || "fr";
 }
@@ -252,7 +256,6 @@ function saveLanguage(lang){
     localStorage.setItem("lang", lang);
 }
 
-// تطبيق
 function applyTranslation(lang){
     let t = translations[lang];
 
@@ -273,12 +276,10 @@ function applyTranslation(lang){
     document.getElementById("about4").innerText=t.about4;
     document.getElementById("about5").innerText=t.about5;
 
-    // 🔥 الإضافة الوحيدة
     document.getElementById("contactTitle").innerText=t.contactTitle;
     document.getElementById("contactText").innerText=t.contactText;
 }
 
-// تغيير اللغة
 document.querySelectorAll("input[name='lang']").forEach(r=>{
     r.addEventListener("change",e=>{
         saveLanguage(e.target.value);
@@ -286,14 +287,12 @@ document.querySelectorAll("input[name='lang']").forEach(r=>{
     });
 });
 
-// تحميل
 function loadLanguage(){
     let lang=getLanguage();
     document.querySelector(`input[value="${lang}"]`).checked=true;
     applyTranslation(lang);
 }
 
-// 🔥 تنقل
 function goToGame(page){
     sessionStorage.setItem("fromIndex", "true");
     window.location.href=page;
