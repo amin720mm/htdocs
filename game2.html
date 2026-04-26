@@ -29,7 +29,6 @@ body {
     aspect-ratio:1/1;
     object-fit:contain;
     background:#fff;
-    /*background:#f1f1f1;*/
     padding:10px;
     border-radius:15px;
     margin:auto;
@@ -124,6 +123,20 @@ placeholder="اكتب الإجابة هنا">
 
 <script>
 
+// 🔥🔥🔥 إضافة: اللغة من index + الاتجاه
+function applyGlobalLanguage(){
+    let lang = localStorage.getItem("lang") || "ar";
+
+    document.documentElement.lang = lang;
+    document.body.dir = (lang === "ar") ? "rtl" : "ltr";
+
+    document.querySelectorAll("input[name='lang']").forEach(r=>r.checked=false);
+    let el=document.querySelector(`input[value="${lang}"]`);
+    if(el) el.checked=true;
+
+    applyTranslation(lang);
+}
+
 // ✅ تحميل الصور مع دعم JPG و jpg
 function loadImageWithFallback(imgElement, file) {
 
@@ -143,11 +156,11 @@ function loadImageWithFallback(imgElement, file) {
     };
 }
 
-// 🌍 ترجمة
+// 🌍 ترجمة (تم توسيعها فقط بدون حذف)
 const translations = {
-    ar:{title:"⌨️ لعبة الكتابة",start:"ابدأ ▶",next:"السؤال التالي ▶",score:"النقاط",back:"⬅ الرجوع",search:"🔎 ابحث..."},
-    fr:{title:"⌨️ Jeu d'écriture",start:"Commencer ▶",next:"Suivant ▶",score:"Score",back:"⬅ Retour",search:"🔎 Rechercher..."},
-    en:{title:"⌨️ Writing Game",start:"Start ▶",next:"Next ▶",score:"Score",back:"⬅ Back",search:"🔎 Search..."}
+    ar:{title:"⌨️ لعبة الكتابة",start:"ابدأ ▶",next:"السؤال التالي ▶",score:"النقاط",back:"⬅ الرجوع",search:"🔎 ابحث...",hint:"عدد الحروف",correct:"✅ صحيح!",close:"🟡 قريب جدًا!",wrong:"❌ خطأ! الإجابة:"},
+    fr:{title:"⌨️ Jeu d'écriture",start:"Commencer ▶",next:"Suivant ▶",score:"Score",back:"⬅ Retour",search:"🔎 Rechercher...",hint:"Nombre de lettres",correct:"✅ Correct!",close:"🟡 Presque!",wrong:"❌ Faux! Réponse:"},
+    en:{title:"⌨️ Writing Game",start:"Start ▶",next:"Next ▶",score:"Score",back:"⬅ Back",search:"🔎 Search...",hint:"Letters",correct:"✅ Correct!",close:"🟡 Close!",wrong:"❌ Wrong! Answer:"}
 };
 
 function saveLanguage(lang){localStorage.setItem("lang",lang);}
@@ -160,6 +173,7 @@ function loadLanguage(){
 
 function applyTranslation(lang){
     let t=translations[lang]||translations.ar;
+
     document.getElementById("title").innerText=t.title;
     document.getElementById("gameTitle").innerText=t.title;
     document.getElementById("startBtn").innerText=t.start;
@@ -170,6 +184,7 @@ function applyTranslation(lang){
     document.getElementById("score").innerText=t.score+": "+score;
 }
 
+// تغيير اللغة
 document.querySelectorAll("input[name='lang']").forEach(r=>{
     r.onchange=e=>{
         saveLanguage(e.target.value);
@@ -246,7 +261,8 @@ function startGame(){
 
     correctAnswer=current.answers[lang]||"";
 
-    document.getElementById("hint").innerText="عدد الحروف: "+correctAnswer.length;
+    let t=translations[lang]||translations.ar;
+    document.getElementById("hint").innerText=t.hint+": "+correctAnswer.length;
 
     document.getElementById("answer").value="";
     document.getElementById("result").innerText="";
@@ -277,22 +293,24 @@ function checkAnswer(){
 
     let distance=levenshtein(user,correct);
 
+    let lang=document.querySelector("input[name='lang']:checked").value;
+    let t=translations[lang]||translations.ar;
+
     if(distance===0){
-        result.innerText="✅ صحيح!";
+        result.innerText=t.correct;
         result.className="text-success text-center";
         score++;
         document.getElementById("nextBtn").classList.remove("d-none");
     }
     else if(distance<=2){
-        result.innerText="🟡 قريب جدًا!";
+        result.innerText=t.close;
         result.className="text-warning text-center";
     }
     else{
-        result.innerText="❌ خطأ! الإجابة: "+correctAnswer;
+        result.innerText=t.wrong+" "+correctAnswer;
         result.className="text-danger text-center";
     }
 
-    let lang=document.querySelector("input[name='lang']:checked").value;
     applyTranslation(lang);
 }
 
@@ -300,7 +318,9 @@ function goBack(){
     window.location.href="index.html";
 }
 
+// 🔥 تشغيل
 window.onload=()=>{
+    applyGlobalLanguage(); // 🔥 الجديد
     loadLanguage();
     loadCategories();
     loadFilteredData();
