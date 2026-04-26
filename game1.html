@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لعبة الصور</title>
+
+<title id="pageTitle">لعبة الصور</title>
 
 <link rel="stylesheet" href="css/bootstrap.min.css">
 
@@ -98,49 +99,92 @@ onclick="startGame()">السؤال التالي ▶</button>
 
 <script>
 
-// 🌍 ترجمة الواجهة
+// 🌍 ترجمة كاملة (واجهة + نتائج)
 const uiText = {
+
 ar:{
-nav:"🖼️ لعبة تخمين الصور",
+title:"🖼️ لعبة تخمين الصور",
+game:"🎮 لعبة تخمين الصور",
 start:"ابدأ ▶",
 next:"السؤال التالي ▶",
 back:"⬅ الرجوع",
 score:"النقاط",
 easy:"سهل",
 medium:"متوسط",
-hard:"صعب"
+hard:"صعب",
+correct:"✅ صحيح!",
+wrong:"❌ خطأ!"
 },
+
 fr:{
-nav:"🖼️ Jeu d'images",
+title:"🖼️ Jeu d'images",
+game:"🎮 Jeu d'images",
 start:"Commencer ▶",
 next:"Suivant ▶",
 back:"⬅ Retour",
 score:"Score",
 easy:"Facile",
 medium:"Moyen",
-hard:"Difficile"
+hard:"Difficile",
+correct:"✅ Correct!",
+wrong:"❌ Faux!"
 },
+
 en:{
-nav:"🖼️ Image Game",
+title:"🖼️ Image Game",
+game:"🎮 Image Game",
 start:"Start ▶",
 next:"Next ▶",
 back:"⬅ Back",
 score:"Score",
 easy:"Easy",
 medium:"Medium",
-hard:"Hard"
+hard:"Hard",
+correct:"✅ Correct!",
+wrong:"❌ Wrong!"
+},
+
+nl:{
+title:"🖼️ Afbeeldingen spel",
+game:"🎮 Afbeeldingen spel",
+start:"Start ▶",
+next:"Volgende ▶",
+back:"⬅ Terug",
+score:"Score",
+easy:"Makkelijk",
+medium:"Gemiddeld",
+hard:"Moeilijk",
+correct:"✅ Correct!",
+wrong:"❌ Fout!"
+},
+
+de:{
+title:"🖼️ Bilderspiel",
+game:"🎮 Bilderspiel",
+start:"Start ▶",
+next:"Weiter ▶",
+back:"⬅ Zurück",
+score:"Punkte",
+easy:"Einfach",
+medium:"Mittel",
+hard:"Schwer",
+correct:"✅ Richtig!",
+wrong:"❌ Falsch!"
 }
+
 };
 
-// 🔥 تطبيق لغة الصفحة
+// 🔥 تطبيق اللغة
 function applyUILanguage(){
+
     let lang = localStorage.getItem("lang") || "ar";
     let t = uiText[lang] || uiText.ar;
 
     document.documentElement.lang = lang;
     document.body.dir = (lang==="ar") ? "rtl" : "ltr";
 
-    document.getElementById("navTitle").innerText = t.nav;
+    document.getElementById("navTitle").innerText = t.title;
+    document.getElementById("gameTitle").innerText = t.game;
     document.getElementById("startBtn").innerText = t.start;
     document.getElementById("nextBtn").innerText = t.next;
     document.getElementById("backBtn").innerText = t.back;
@@ -148,7 +192,8 @@ function applyUILanguage(){
 
     document.getElementById("score").innerText = t.score + ": " + score;
 
-    // ترجمة الصعوبة
+    document.title = t.title;
+
     let diff = document.getElementById("difficulty");
     diff.options[0].text = t.easy;
     diff.options[1].text = t.medium;
@@ -168,11 +213,10 @@ let level = parseInt(localStorage.getItem("level")) || 1;
 
 let gameLang = localStorage.getItem("gameLang") || localStorage.getItem("lang") || "ar";
 
-// 🧠 عند التشغيل
 window.onload = () => {
     document.getElementById("gameLang").value = gameLang;
     updateScore();
-    applyUILanguage(); // 🔥 هنا الترجمة
+    applyUILanguage();
 };
 
 document.getElementById("gameLang").onchange = function(){
@@ -243,7 +287,11 @@ function generateChoices(lang, count){
     });
 }
 
+// 🔥 تم تعديل هذه الدالة فقط
 function checkAnswer(selected){
+
+    let lang = localStorage.getItem("lang") || "ar";
+    let t = uiText[lang];
 
     let result=document.getElementById("result");
     let buttons=document.querySelectorAll(".choice");
@@ -261,12 +309,12 @@ function checkAnswer(selected){
     });
 
     if(selected===correctAnswer){
-        result.innerText="✅ صحيح!";
+        result.innerText = t.correct; // ✅ مترجمة
         score++;
         correctSound.play();
         if(score % 5 === 0) level++;
     }else{
-        result.innerText="❌ خطأ!";
+        result.innerText = t.wrong; // ❌ مترجمة
         wrongSound.play();
     }
 
@@ -274,7 +322,7 @@ function checkAnswer(selected){
     localStorage.setItem("level", level);
 
     updateScore();
-    applyUILanguage(); // 🔥 تحديث النصوص
+    applyUILanguage();
 
     document.getElementById("nextBtn").classList.remove("d-none");
 }
