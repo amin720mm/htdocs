@@ -1,6 +1,137 @@
 const imagesData = [
 
 /* ================= ROOM ================= */
+{
+  file: "matras.jpg",
+  category: "Room-components",
+  answers: {
+    ar: "مرتبة",
+    fr: "matelas",
+    en: "mattress",
+    nl: "matras",
+    de: "Matratze"
+  }
+},
+
+{
+  file: "tapijt.jpg",
+  category: "Room-components",
+  answers: {
+    ar: "سجادة",
+    fr: "tapis",
+    en: "carpet",
+    nl: "tapijt",
+    de: "Teppich"
+  }
+},
+
+{
+  file: "vensterbank.jpg",
+  category: "Room-components",
+  answers: {
+    ar: "حافة النافذة",
+    fr: "rebord de fenêtre",
+    en: "windowsill",
+    nl: "vensterbank",
+    de: "Fensterbank"
+  }
+},
+
+{
+  file: "badkamer.jpg",
+  category: "Home-and-surroundings",
+  answers: {
+    ar: "حمام",
+    fr: "salle de bain",
+    en: "bathroom",
+    nl: "badkamer",
+    de: "Badezimmer"
+  }
+},
+
+{
+  file: "huis.jpg",
+  category: "Home-and-surroundings",
+  answers: {
+    ar: "منزل",
+    fr: "maison",
+    en: "house",
+    nl: "huis",
+    de: "Haus"
+  }
+},
+
+{
+  file: "kamer.jpg",
+  category: "Home-and-surroundings",
+  answers: {
+    ar: "غرفة",
+    fr: "chambre",
+    en: "room",
+    nl: "kamer",
+    de: "Zimmer"
+  }
+},
+
+{
+  file: "keuken.jpg",
+  category: "Home-and-surroundings",
+  answers: {
+    ar: "مطبخ",
+    fr: "cuisine",
+    en: "kitchen",
+    nl: "keuken",
+    de: "Küche"
+  }
+},
+
+{
+  file: "slaapkamer.jpg",
+  category: "Home-and-surroundings",
+  answers: {
+    ar: "غرفة نوم",
+    fr: "chambre à coucher",
+    en: "bedroom",
+    nl: "slaapkamer",
+    de: "Schlafzimmer"
+  }
+},
+
+{
+  file: "straat.jpg",
+  category: "Home-and-surroundings",
+  answers: {
+    ar: "شارع",
+    fr: "rue",
+    en: "street",
+    nl: "straat",
+    de: "Straße"
+  }
+},
+
+{
+  file: "tuin.jpg",
+  category: "Home-and-surroundings",
+  answers: {
+    ar: "حديقة",
+    fr: "jardin",
+    en: "garden",
+    nl: "tuin",
+    de: "Garten"
+  }
+},
+
+{
+  file: "woonkamer.jpg",
+  category: "Home-and-surroundings",
+  answers: {
+    ar: "غرفة المعيشة",
+    fr: "salon",
+    en: "living room",
+    nl: "woonkamer",
+    de: "Wohnzimmer"
+  }
+},
 
 {
   file: "deken.jpg",
