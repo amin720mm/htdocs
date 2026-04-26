@@ -37,32 +37,43 @@ body {
 }
 .game-img:hover { transform:scale(1.05); }
 
-/* 🔥 تأثيرات جديدة */
+/* 🔥 تأثير TikTok */
 .correct-anim {
     animation: pop 0.4s ease;
 }
 @keyframes pop {
-    0%{transform:scale(0.8);}
+    0%{transform:scale(0.7);}
     100%{transform:scale(1);}
 }
 
-/* أزرار */
+/* ❌ خطأ */
+.shake {
+    animation: shake 0.4s;
+}
+@keyframes shake {
+    0%{transform:translateX(0);}
+    25%{transform:translateX(-5px);}
+    50%{transform:translateX(5px);}
+    75%{transform:translateX(-5px);}
+    100%{transform:translateX(0);}
+}
+
+/* Glow */
+.glow {
+    box-shadow:0 0 15px lime;
+}
+
 .btn {
     border-radius:10px;
     transition:0.2s;
 }
 .btn:hover { transform:scale(1.05); }
 
-/* اختيارات */
 .choice {
     width:100%;
     border-radius:10px;
 }
 
-/* النص */
-.text-style { transition:0.2s; }
-
-/* نتيجة */
 #result {
     font-weight:bold;
     text-align:center;
@@ -75,93 +86,40 @@ body {
 
 <nav class="navbar navbar-dark px-3 shadow">
     <span id="title" class="navbar-brand fw-bold">🖼️ لعبة تخمين الصور</span>
-    <button class="btn btn-light btn-sm" onclick="togglePanel()">⚙️</button>
 </nav>
-
-<div id="panel" class="control-panel container py-3">
-
-    <div class="card p-2 mb-2 shadow-sm">
-        <div class="d-flex gap-2">
-            <input type="text" id="search" class="form-control"
-                   placeholder="🔎 ابحث..." oninput="loadFilteredData()">
-            <button id="backBtn" class="btn btn-outline-secondary" onclick="goBack()">⬅</button>
-        </div>
-    </div>
-
-    <div class="card p-2 mb-2 shadow-sm">
-        <div class="d-flex flex-wrap gap-2 justify-content-center">
-
-            <select id="fontSelect" class="form-select form-select-sm" style="width:auto">
-                <option value="default">الخط</option>
-                <option value="arial">Arial</option>
-                <option value="tahoma">Tahoma</option>
-                <option value="monospace">Mono</option>
-            </select>
-
-            <select id="sizeSelect" class="form-select form-select-sm" style="width:auto">
-                <option value="14">صغير</option>
-                <option value="16" selected>متوسط</option>
-                <option value="20">كبير</option>
-            </select>
-
-            <input type="color" id="colorPicker" style="width:40px;height:35px">
-
-            <button class="btn btn-sm btn-outline-dark" onclick="toggleBold()">B</button>
-            <button class="btn btn-sm btn-outline-dark" onclick="toggleItalic()">I</button>
-
-            <button class="btn btn-sm btn-outline-primary" onclick="setAlign('left')" id="leftBtn">يسار</button>
-            <button class="btn btn-sm btn-outline-primary" onclick="setAlign('center')" id="centerBtn">وسط</button>
-            <button class="btn btn-sm btn-outline-primary" onclick="setAlign('right')" id="rightBtn">يمين</button>
-
-        </div>
-    </div>
-
-    <div class="card p-2 mb-2 shadow-sm">
-        <div class="d-flex flex-wrap justify-content-center gap-3">
-
-            <label><input type="radio" name="lang" value="ar"> عربي</label>
-            <label><input type="radio" name="lang" value="fr"> Français</label>
-            <label><input type="radio" name="lang" value="en"> English</label>
-            <label><input type="radio" name="lang" value="nl"> Nederlands</label>
-            <label><input type="radio" name="lang" value="de"> Deutsch</label>
-
-        </div>
-    </div>
-
-</div>
 
 <div class="container py-4">
 <div class="card shadow p-3">
 
-<h4 id="gameTitle" class="text-center mb-3 text-style">🎮 لعبة تخمين الصور</h4>
+<h4 id="gameTitle" class="text-center mb-3">🎮 لعبة تخمين الصور</h4>
+
+<!-- مستوى -->
+<select id="difficulty" class="form-select mb-2">
+<option value="easy">سهل</option>
+<option value="medium">متوسط</option>
+<option value="hard">صعب</option>
+</select>
 
 <button id="startBtn" class="btn btn-success w-100 mb-3" onclick="startGame()">ابدأ ▶</button>
 
-<p id="score" class="text-center fw-bold text-style">النقاط: 0</p>
-
-<!-- 🔥 مستوى -->
+<p id="score" class="text-center fw-bold">النقاط: 0</p>
 <p id="level" class="text-center text-primary fw-bold">Level: 1</p>
 
 <img id="image" class="game-img mb-2">
 
-<p id="hint" class="text-center text-muted text-style"></p>
+<p id="hint" class="text-center text-muted"></p>
 
 <div id="choices" class="d-grid gap-2"></div>
 
 <p id="result"></p>
 
 <button id="nextBtn" class="btn btn-info w-100 mt-2 d-none"
-onclick="startGame()">
-السؤال التالي ▶
-</button>
-
-<button id="backBtn2" class="btn btn-outline-secondary w-100 mt-3" onclick="goBack()">⬅ الرجوع</button>
+onclick="startGame()">السؤال التالي ▶</button>
 
 </div>
 </div>
 
 <script src="data.js"></script>
-<script src="js/bootstrap.bundle.min.js"></script>
 
 <script>
 
@@ -169,19 +127,69 @@ onclick="startGame()">
 let correctSound = new Audio("sounds/correct.mp3");
 let wrongSound = new Audio("sounds/wrong.mp3");
 
-// 🎯 نظام المستوى
-let level = 1;
+// 🎯 بيانات
+let data = imagesData;
+let current;
+let correctAnswer;
 
-// 🔥 باقي كودك بدون حذف 👇
+// 💾 تحميل النقاط
+let score = parseInt(localStorage.getItem("score")) || 0;
+let level = parseInt(localStorage.getItem("level")) || 1;
 
-// (نفس كودك بالكامل)
+// عرض أولي
+updateScore();
 
-// 🔥 تعديل checkAnswer فقط (إضافة تأثيرات + صوت + مستوى)
-
-function checkAnswer(selected){
+// 🎮 بدء اللعبة
+function startGame(){
 
     let lang = localStorage.getItem("lang") || "ar";
-    let t = translations[lang];
+    let difficulty = document.getElementById("difficulty").value;
+
+    current = data[Math.floor(Math.random()*data.length)];
+
+    document.getElementById("image").src="images/"+current.file;
+
+    correctAnswer=current.answers[lang]||"";
+
+    // 🎯 صعوبة
+    let choicesCount = 3;
+    if(difficulty==="medium") choicesCount = 4;
+    if(difficulty==="hard") choicesCount = 6;
+
+    generateChoices(lang, choicesCount);
+
+    document.getElementById("hint").innerText = "عدد الحروف: "+correctAnswer.length;
+
+    document.getElementById("result").innerText="";
+    document.getElementById("nextBtn").classList.add("d-none");
+}
+
+// 🔘 توليد اختيارات
+function generateChoices(lang, count){
+
+    let div=document.getElementById("choices");
+    div.innerHTML="";
+
+    let answers=[correctAnswer];
+
+    while(answers.length < count){
+        let r = data[Math.floor(Math.random()*data.length)].answers[lang];
+        if(r && !answers.includes(r)) answers.push(r);
+    }
+
+    answers.sort(()=>Math.random()-0.5);
+
+    answers.forEach(a=>{
+        let btn=document.createElement("button");
+        btn.className="btn btn-outline-primary choice";
+        btn.innerText=a;
+        btn.onclick=()=>checkAnswer(a);
+        div.appendChild(btn);
+    });
+}
+
+// ✅ تحقق
+function checkAnswer(selected){
 
     let result=document.getElementById("result");
     let buttons=document.querySelectorAll(".choice");
@@ -189,37 +197,45 @@ function checkAnswer(selected){
     buttons.forEach(btn=>{
         btn.disabled=true;
 
-        if(btn.innerText === correctAnswer){
-            btn.classList.add("btn-success","correct-anim");
+        if(btn.innerText===correctAnswer){
+            btn.classList.add("btn-success","glow","correct-anim");
         }
 
-        if(btn.innerText === selected && selected !== correctAnswer){
-            btn.classList.add("btn-danger");
+        if(btn.innerText===selected && selected!==correctAnswer){
+            btn.classList.add("btn-danger","shake");
         }
     });
 
     if(selected===correctAnswer){
-        result.innerText=t.correct;
+        result.innerText="✅ صحيح!";
         result.className="text-success";
+
         score++;
+        correctSound.play();
 
-        correctSound.play(); // 🔊
-
-        // 🔥 رفع المستوى
         if(score % 5 === 0){
             level++;
-            document.getElementById("level").innerText = "Level: " + level;
         }
 
     }else{
-        result.innerText=t.wrong;
+        result.innerText="❌ خطأ!";
         result.className="text-danger";
-
-        wrongSound.play(); // 🔊
+        wrongSound.play();
     }
 
-    applyTranslation(lang);
+    // 💾 حفظ
+    localStorage.setItem("score", score);
+    localStorage.setItem("level", level);
+
+    updateScore();
+
     document.getElementById("nextBtn").classList.remove("d-none");
+}
+
+// 📊 تحديث العرض
+function updateScore(){
+    document.getElementById("score").innerText="النقاط: "+score;
+    document.getElementById("level").innerText="Level: "+level;
 }
 
 </script>
