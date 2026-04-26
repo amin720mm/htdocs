@@ -18,10 +18,6 @@ body {
     background: linear-gradient(135deg, #4facfe, #00f2fe);
 }
 
-/* Panel */
-.control-panel { transition: 0.3s; }
-.control-panel.hidden { display:none; }
-
 /* صورة */
 .game-img {
     width:100%;
@@ -33,74 +29,48 @@ body {
     border-radius:15px;
     margin:auto;
     display:block;
-    transition:0.3s;
-}
-.game-img:hover { transform:scale(1.05); }
-
-/* 🔥 تأثير TikTok */
-.correct-anim {
-    animation: pop 0.4s ease;
-}
-@keyframes pop {
-    0%{transform:scale(0.7);}
-    100%{transform:scale(1);}
 }
 
-/* ❌ خطأ */
-.shake {
-    animation: shake 0.4s;
-}
+/* تأثيرات */
+.correct-anim { animation: pop 0.4s; }
+@keyframes pop { from{transform:scale(0.7);} to{transform:scale(1);} }
+
+.shake { animation: shake 0.4s; }
 @keyframes shake {
-    0%{transform:translateX(0);}
-    25%{transform:translateX(-5px);}
-    50%{transform:translateX(5px);}
-    75%{transform:translateX(-5px);}
-    100%{transform:translateX(0);}
+0%{transform:translateX(0);}
+25%{transform:translateX(-5px);}
+50%{transform:translateX(5px);}
+75%{transform:translateX(-5px);}
+100%{transform:translateX(0);}
 }
 
-/* Glow */
-.glow {
-    box-shadow:0 0 15px lime;
-}
+.glow { box-shadow:0 0 15px lime; }
 
-.btn {
-    border-radius:10px;
-    transition:0.2s;
-}
-.btn:hover { transform:scale(1.05); }
-
-.choice {
-    width:100%;
-    border-radius:10px;
-}
-
-#result {
-    font-weight:bold;
-    text-align:center;
-    margin-top:10px;
-}
+.choice { width:100%; }
 </style>
 </head>
 
 <body>
 
+<!-- ✅ Navbar رجعناه -->
 <nav class="navbar navbar-dark px-3 shadow">
-    <span id="title" class="navbar-brand fw-bold">🖼️ لعبة تخمين الصور</span>
+    <span class="navbar-brand fw-bold">🖼️ لعبة تخمين الصور</span>
+    <button class="btn btn-light btn-sm" onclick="goBack()">⬅</button>
 </nav>
 
 <div class="container py-4">
 <div class="card shadow p-3">
 
-<h4 id="gameTitle" class="text-center mb-3">🎮 لعبة تخمين الصور</h4>
+<h4 class="text-center mb-3">🎮 لعبة تخمين الصور</h4>
 
-<!-- مستوى -->
+<!-- ✅ مستوى -->
 <select id="difficulty" class="form-select mb-2">
 <option value="easy">سهل</option>
 <option value="medium">متوسط</option>
 <option value="hard">صعب</option>
 </select>
 
-<button id="startBtn" class="btn btn-success w-100 mb-3" onclick="startGame()">ابدأ ▶</button>
+<button class="btn btn-success w-100 mb-3" onclick="startGame()">ابدأ ▶</button>
 
 <p id="score" class="text-center fw-bold">النقاط: 0</p>
 <p id="level" class="text-center text-primary fw-bold">Level: 1</p>
@@ -111,10 +81,13 @@ body {
 
 <div id="choices" class="d-grid gap-2"></div>
 
-<p id="result"></p>
+<p id="result" class="text-center fw-bold"></p>
 
 <button id="nextBtn" class="btn btn-info w-100 mt-2 d-none"
 onclick="startGame()">السؤال التالي ▶</button>
+
+<!-- ✅ زر رجوع -->
+<button class="btn btn-outline-secondary w-100 mt-3" onclick="goBack()">⬅ الرجوع</button>
 
 </div>
 </div>
@@ -132,12 +105,27 @@ let data = imagesData;
 let current;
 let correctAnswer;
 
-// 💾 تحميل النقاط
+// 💾 نقاط
 let score = parseInt(localStorage.getItem("score")) || 0;
 let level = parseInt(localStorage.getItem("level")) || 1;
 
-// عرض أولي
 updateScore();
+
+// ✅ حل مشكلة الصور (JPG / jpg)
+function loadImage(file){
+    let img = document.getElementById("image");
+    let base = "images/";
+
+    img.src = base + file;
+
+    img.onerror = function(){
+        if(file.endsWith(".jpg")){
+            img.src = base + file.replace(".jpg",".JPG");
+        }else{
+            img.src = base + file.replace(".JPG",".jpg");
+        }
+    };
+}
 
 // 🎮 بدء اللعبة
 function startGame(){
@@ -147,24 +135,24 @@ function startGame(){
 
     current = data[Math.floor(Math.random()*data.length)];
 
-    document.getElementById("image").src="images/"+current.file;
+    loadImage(current.file); // ✅ استبدلنا src
 
     correctAnswer=current.answers[lang]||"";
 
-    // 🎯 صعوبة
     let choicesCount = 3;
     if(difficulty==="medium") choicesCount = 4;
     if(difficulty==="hard") choicesCount = 6;
 
     generateChoices(lang, choicesCount);
 
-    document.getElementById("hint").innerText = "عدد الحروف: "+correctAnswer.length;
+    document.getElementById("hint").innerText =
+        "عدد الحروف: "+correctAnswer.length;
 
     document.getElementById("result").innerText="";
     document.getElementById("nextBtn").classList.add("d-none");
 }
 
-// 🔘 توليد اختيارات
+// 🔘 اختيارات
 function generateChoices(lang, count){
 
     let div=document.getElementById("choices");
@@ -223,7 +211,6 @@ function checkAnswer(selected){
         wrongSound.play();
     }
 
-    // 💾 حفظ
     localStorage.setItem("score", score);
     localStorage.setItem("level", level);
 
@@ -232,10 +219,15 @@ function checkAnswer(selected){
     document.getElementById("nextBtn").classList.remove("d-none");
 }
 
-// 📊 تحديث العرض
+// 📊 تحديث
 function updateScore(){
     document.getElementById("score").innerText="النقاط: "+score;
     document.getElementById("level").innerText="Level: "+level;
+}
+
+// 🔙 رجوع
+function goBack(){
+    window.location.href="index.html";
 }
 
 </script>
