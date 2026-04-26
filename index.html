@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
@@ -13,55 +14,7 @@ body {
     min-height: 100vh;
 }
 
-/* NAVBAR */
-.navbar-custom {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    height: 65px;
-    background: rgba(0,0,0,0.4);
-    backdrop-filter: blur(10px);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 15px;
-    z-index: 9999;
-}
-
-.nav-logo {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-}
-
-.menu-btn {
-    font-size: 26px;
-    color: white;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-.menu {
-    position: absolute;
-    top: 65px;
-    right: 10px;
-    background: rgba(0,0,0,0.9);
-    border-radius: 10px;
-    display: none;
-    padding: 10px;
-}
-
-.menu button {
-    display: block;
-    width: 100%;
-    background: none;
-    border: none;
-    color: white;
-    padding: 8px;
-}
-
-/* LOGO */
+/* 🔥 LOGO أعلى اليسار */
 .top-logo {
     position: fixed;
     top: 15px;
@@ -69,15 +22,21 @@ body {
     width: 60px;
     height: 60px;
     border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     z-index: 1000;
+    pointer-events: none; /* ✅ إصلاح مهم: لا يمنع الضغط */
+
+    transition: all 0.3s ease;
 }
 
-/* الهاتف */
-@media (max-width:768px){
-    .top-logo{ display:none; }
+/* 🔥 تأثير hover */
+.top-logo:hover {
+    transform: scale(1.2);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
 }
 
-/* cards */
+/* الكروت */
 .card {
     cursor: pointer;
     transition: 0.3s;
@@ -86,13 +45,7 @@ body {
     transform: scale(1.05);
 }
 
-.container {
-    position: relative;
-    z-index: 1;
-    padding-top: 80px;
-}
-
-/* Contact */
+/* Contact Box */
 .contact-box {
     margin-top: 30px;
     border-radius: 20px;
@@ -100,119 +53,218 @@ body {
     background: rgba(255,255,255,0.2);
     backdrop-filter: blur(10px);
     color: white;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 
-/* Footer */
+.contact-box a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 18px;
+    background: #0d6efd;
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.contact-box a:hover {
+    background: #084298;
+    transform: scale(1.05);
+}
+
+/* Footer VIP */
 .footer-box {
     margin-top: 40px;
     border-radius: 25px;
     padding: 25px;
     background: rgba(255,255,255,0.15);
     backdrop-filter: blur(12px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
     color: white;
+}
+
+.footer-box p {
+    margin: 6px 0;
+}
+
+.signature {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.3);
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.signature span {
+    font-weight: bold;
+    color: #ffd700;
+}
+
+.footer-end {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #fff;
+}
+
+/* ✅ إصلاح الضغط */
+.container {
+    position: relative;
+    z-index: 1;
 }
 </style>
 
 </head>
 
-<body>
-
-<!-- NAVBAR -->
-<div class="navbar-custom">
-    <img src="images/logoproject.jpg" class="nav-logo">
-
-    <button class="menu-btn" onclick="toggleMenu()">☰</button>
-
-    <div class="menu" id="menu">
-        <button onclick="alert('Login')">Login</button>
-        <button onclick="alert('Profile')">Profile</button>
-    </div>
-</div>
+<body class="d-flex align-items-center justify-content-center">
 
 <img src="images/logoproject.jpg" class="top-logo">
 
 <div class="container text-center">
 
 <div class="mb-3 text-white">
-    <label><input type="radio" name="lang" value="fr"> Français</label>
-    <label><input type="radio" name="lang" value="ar"> عربي</label>
-    <label><input type="radio" name="lang" value="en"> English</label>
-    <label><input type="radio" name="lang" value="nl"> Nederlands</label>
+    <label class="me-2"><input type="radio" name="lang" value="fr"> Français</label>
+    <label class="me-2"><input type="radio" name="lang" value="ar"> عربي</label>
+    <label class="me-2"><input type="radio" name="lang" value="en"> English</label>
+    <label class="me-2"><input type="radio" name="lang" value="nl"> Nederlands</label>
 </div>
 
-<h2 id="title" class="text-white mb-4">...</h2>
+<h2 id="title" class="text-white mb-4">إختر التطبيق المناسب</h2>
 
 <div class="row g-3">
 
 <div class="col-12">
-<div class="card p-3" onclick="goToGame('gallery.html')">
-<h4 id="galleryTitle"></h4>
-<p id="galleryDesc"></p>
-</div>
-</div>
-
-<div class="col-6">
-<div class="card p-3" onclick="goToGame('game2.html')">
-<h5 id="writeTitle"></h5>
-<small id="writeDesc"></small>
-</div>
+    <div class="card shadow-lg p-3 border-0" onclick="goToGame('gallery.html')">
+        <h4 id="galleryTitle">🖼️ عرض كل الصور</h4>
+        <p id="galleryDesc" class="text-muted">استكشف جميع الصور</p>
+    </div>
 </div>
 
 <div class="col-6">
-<div class="card p-3" onclick="goToGame('game1.html')">
-<h5 id="imageTitle"></h5>
-<small id="imageDesc"></small>
+    <div class="card shadow p-3 border-0" onclick="goToGame('game2.html')">
+        <h5 id="writeTitle">⌨️ الكتابة</h5>
+        <small id="writeDesc">اختبر مهارتك</small>
+    </div>
 </div>
+
+<div class="col-6">
+    <div class="card shadow p-3 border-0" onclick="goToGame('game1.html')">
+        <h5 id="imageTitle">🖼️ الصور</h5>
+        <small id="imageDesc">تعلم بالصور</small>
+    </div>
 </div>
 
 </div>
 
+<!-- 🔥 Contact Section -->
 <div class="contact-box">
-<h4 id="contactTitle"></h4>
-<p id="contactText"></p>
-<a href="mailto:mohamed.amin@themanai.com">
-mohamed.amin@themanai.com
-</a>
+    <h4 id="contactTitle">📩 تواصل معنا</h4>
+    <p id="contactText">لأي اقتراح أو استفسار، يمكنك مراسلتنا عبر البريد الإلكتروني:</p>
+    <a href="mailto:mohamed.amin@themanai.com" id="contactEmail">
+        mohamed.amin@themanai.com
+    </a>
 </div>
 
-<div class="footer-box">
+<!-- 🔥 Footer -->
+
+<div class="footer-box mt-4">
 <p id="about1"></p>
 <p id="about2"></p>
 <p id="about3"></p>
 <p id="about4"></p>
-<p id="about5"></p>
+<div class="signature">المبرمج المناعي — Manai / Manaï</div>
+<p id="about5" class="footer-end"></p>
 </div>
 
 </div>
+
+<script src="js/bootstrap.bundle.min.js"></script>
 
 <script>
 
-/* MENU */
-function toggleMenu(){
-    let m=document.getElementById("menu");
-    m.style.display = (m.style.display==="block")?"none":"block";
-}
-
-/* close menu */
-document.addEventListener("click", function(e){
-    let m=document.getElementById("menu");
-    let b=document.querySelector(".menu-btn");
-    if(!m.contains(e.target) && !b.contains(e.target)){
-        m.style.display="none";
-    }
-});
-
-/* TRANSLATIONS */
+// 🌍 الترجمات (كما هي بدون تغيير)
 const translations = {
-fr:{title:"Choisissez l'application",gallery:"Voir images",galleryDesc:"Explorer",write:"Écriture",writeDesc:"Test",image:"Images",imageDesc:"Apprendre",about1:"Plateforme",about2:"Hobby",about3:"Open source",about4:"Savoir",about5:"Vie meilleure",contactTitle:"Contact",contactText:"Email :"},
-ar:{title:"إختر التطبيق",gallery:"عرض الصور",galleryDesc:"استكشاف",write:"الكتابة",writeDesc:"اختبار",image:"الصور",imageDesc:"تعلم",about1:"منصة",about2:"هواية",about3:"مفتوح",about4:"المعرفة",about5:"حياة أفضل",contactTitle:"تواصل",contactText:"راسلنا:"},
-en:{title:"Choose app",gallery:"Images",galleryDesc:"Explore",write:"Writing",writeDesc:"Test",image:"Images",imageDesc:"Learn",about1:"Platform",about2:"Hobby",about3:"Open source",about4:"Knowledge",about5:"Better life",contactTitle:"Contact",contactText:"Email:"},
-nl:{title:"Kies app",gallery:"Afbeeldingen",galleryDesc:"Verken",write:"Schrijven",writeDesc:"Test",image:"Afbeeldingen",imageDesc:"Leren",about1:"Platform",about2:"Hobby",about3:"Open source",about4:"Kennis",about5:"Beter leven",contactTitle:"Contact",contactText:"Email:"}
+    fr:{
+        title:"Choisissez l'application",
+        gallery:"🖼️ Voir toutes les images",
+        galleryDesc:"Explorer toutes les images",
+        write:"⌨️ Écriture",
+        writeDesc:"Testez vos compétences",
+        image:"🖼️ Images",
+        imageDesc:"Apprendre avec les images",
+        about1:"📚 Plateforme éducative gratuite",
+        about2:"Créée comme hobby pour apprendre les langues",
+        about3:"🌍 Projet open source",
+        about4:"🤝 Le savoir pour tous",
+        about5:"✨ Pour une vie meilleure",
+        contactTitle:"📩 Contactez-nous",
+        contactText:"Pour toute suggestion ou question, contactez-nous par email :"
+    },
+    ar:{
+        title:"إختر التطبيق المناسب",
+        gallery:"🖼️ عرض كل الصور",
+        galleryDesc:"استكشف جميع الصور",
+        write:"⌨️ الكتابة",
+        writeDesc:"اختبر مهارتك",
+        image:"🖼️ الصور",
+        imageDesc:"تعلم بالصور",
+        about1:"📚 موقع تعليمي غير ربحي",
+        about2:"تم إنشاؤه كهواية لتعلم اللغات",
+        about3:"🌍 مشروع مفتوح المصدر",
+        about4:"🤝 المعرفة للجميع",
+        about5:"✨ من أجل حياة أفضل",
+        contactTitle:"📩 تواصل معنا",
+        contactText:"لأي اقتراح أو استفسار، يمكنك مراسلتنا عبر البريد الإلكتروني:"
+    },
+    en:{
+        title:"Choose the application",
+        gallery:"🖼️ View all images",
+        galleryDesc:"Explore all images",
+        write:"⌨️ Writing",
+        writeDesc:"Test your skills",
+        image:"🖼️ Images",
+        imageDesc:"Learn with images",
+        about1:"📚 Non-profit educational platform",
+        about2:"Created as a hobby to learn languages",
+        about3:"🌍 Open source project",
+        about4:"🤝 Knowledge for everyone",
+        about5:"✨ For a better life",
+        contactTitle:"📩 Contact us",
+        contactText:"For any suggestion or question, email us at:"
+    },
+    nl:{
+        title:"Kies de applicatie",
+        gallery:"🖼️ Bekijk alle afbeeldingen",
+        galleryDesc:"Verken alle afbeeldingen",
+        write:"⌨️ Schrijven",
+        writeDesc:"Test je vaardigheden",
+        image:"🖼️ Afbeeldingen",
+        imageDesc:"Leren met afbeeldingen",
+        about1:"📚 Gratis educatief platform",
+        about2:"Gemaakt als hobby om talen te leren",
+        about3:"🌍 Open source project",
+        about4:"🤝 Kennis voor iedereen",
+        about5:"✨ Voor een beter leven",
+        contactTitle:"📩 Neem contact op",
+        contactText:"Voor vragen of suggesties, stuur een email naar:"
+    }
 };
 
-/* language */
+// اللغة
+function getLanguage(){
+    return localStorage.getItem("lang") || "fr";
+}
+
+function saveLanguage(lang){
+    localStorage.setItem("lang", lang);
+}
+
+// تطبيق
 function applyTranslation(lang){
-    let t=translations[lang];
+    let t = translations[lang];
+
+    document.documentElement.lang = lang;
+    document.body.dir = (lang==="ar")?"rtl":"ltr";
 
     document.getElementById("title").innerText=t.title;
     document.getElementById("galleryTitle").innerText=t.gallery;
@@ -232,25 +284,28 @@ function applyTranslation(lang){
     document.getElementById("contactText").innerText=t.contactText;
 }
 
-/* radios */
+// تغيير اللغة
 document.querySelectorAll("input[name='lang']").forEach(r=>{
     r.addEventListener("change",e=>{
-        localStorage.setItem("lang", e.target.value);
+        saveLanguage(e.target.value);
         applyTranslation(e.target.value);
     });
 });
 
-/* load */
-window.onload=function(){
-    let lang=localStorage.getItem("lang")||"fr";
+// تحميل
+function loadLanguage(){
+    let lang=getLanguage();
     document.querySelector(`input[value="${lang}"]`).checked=true;
     applyTranslation(lang);
 }
 
-/* navigation */
+// 🔥 تنقل
 function goToGame(page){
+    sessionStorage.setItem("fromIndex", "true");
     window.location.href=page;
 }
+
+window.onload=loadLanguage;
 
 </script>
 
