@@ -13,6 +13,55 @@ body {
     min-height: 100vh;
 }
 
+/* 🔥 Splash Screen */
+#splash {
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background: linear-gradient(135deg, #0d6efd, #6f42c1);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+    animation: fadeOut 1s ease forwards;
+    animation-delay: 2.5s;
+}
+
+@keyframes fadeOut {
+    to { opacity:0; visibility:hidden; }
+}
+
+/* Logo */
+.splash-logo {
+    width:120px;
+    height:120px;
+    border-radius:20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    animation: zoomIn 1s ease;
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.5); opacity:0; }
+    to { transform: scale(1); opacity:1; }
+}
+
+/* اسم */
+.splash-text {
+    color:white;
+    font-size:22px;
+    margin-top:15px;
+    letter-spacing:2px;
+    animation: fadeUp 1s ease;
+}
+
+@keyframes fadeUp {
+    from { transform:translateY(20px); opacity:0; }
+    to { transform:translateY(0); opacity:1; }
+}
+
 /* الكروت */
 .card {
     cursor: pointer;
@@ -22,7 +71,7 @@ body {
     transform: scale(1.05);
 }
 
-/* 🌟 VIP Footer */
+/* Footer VIP */
 .footer-box {
     margin-top: 40px;
     border-radius: 25px;
@@ -34,17 +83,10 @@ body {
     animation: fadeUp 1s ease;
 }
 
-/* ✨ تأثير ظهور */
-@keyframes fadeUp {
-    from { opacity:0; transform: translateY(30px);}
-    to { opacity:1; transform: translateY(0);}
-}
-
 .footer-box p {
     margin: 6px 0;
 }
 
-/* 🔥 توقيع */
 .signature {
     margin-top: 15px;
     padding-top: 10px;
@@ -59,7 +101,6 @@ body {
     text-shadow: 0 0 8px rgba(255,215,0,0.7);
 }
 
-/* ✨ النهاية */
 .footer-end {
     margin-top: 10px;
     font-weight: bold;
@@ -71,6 +112,12 @@ body {
 </head>
 
 <body class="d-flex align-items-center justify-content-center">
+
+<!-- 🔥 Splash Screen -->
+<div id="splash">
+    <img src="images/Logo.JPG" class="splash-logo">
+    <div class="splash-text">MANAI</div>
+</div>
 
 <div class="container text-center">
 
@@ -109,7 +156,7 @@ body {
 
 </div>
 
-<!-- 🌟 VIP Footer -->
+<!-- Footer -->
 <div class="footer-box mt-4">
 
 <p id="about1">📚 هذا الموقع وسيلة تعليمية غير ربحية ومفتوحة للعموم</p>
@@ -117,7 +164,6 @@ body {
 <p id="about3">🌍 مشروع مفتوح المصدر للجميع</p>
 <p id="about4">🤝 المعرفة حق للجميع</p>
 
-<!-- ✍️ التوقيع -->
 <div class="signature" id="signature">
     تم التطوير بواسطة <span>المبرمج المناعي</span> — Manai / Manaï
 </div>
@@ -132,7 +178,14 @@ body {
 
 <script>
 
-// 🌍 الترجمات (محدثة)
+// إزالة Splash بعد التحميل
+window.addEventListener("load", () => {
+    setTimeout(()=>{
+        document.getElementById("splash").style.display = "none";
+    },3000);
+});
+
+// 🌍 الترجمات
 const translations = {
     fr: {
         title:"Choisissez l'application",
@@ -141,13 +194,7 @@ const translations = {
         write:"⌨️ Écriture",
         writeDesc:"Testez vos compétences",
         image:"🖼️ Images",
-        imageDesc:"Apprendre avec les images",
-        about1:"📚 Plateforme éducative gratuite et ouverte à tous",
-        about2:"Créée comme un hobby pour apprendre les langues",
-        about3:"🌍 Projet open source",
-        about4:"🤝 Le savoir pour tous",
-        about5:"✨ Pour une vie meilleure",
-        signature:"Développé par المبرمج المناعي — Manai"
+        imageDesc:"Apprendre avec les images"
     },
     ar: {
         title:"إختر التطبيق المناسب",
@@ -156,13 +203,7 @@ const translations = {
         write:"⌨️ الكتابة",
         writeDesc:"اختبر مهارتك",
         image:"🖼️ الصور",
-        imageDesc:"تعلم بالصور",
-        about1:"📚 هذا الموقع وسيلة تعليمية غير ربحية ومفتوحة للعموم",
-        about2:"تم إنشاؤه كهواية لتعلم اللغات وتطوير المهارات",
-        about3:"🌍 المشروع مفتوح المصدر",
-        about4:"🤝 المعرفة حق للجميع",
-        about5:"✨ من أجل حياة أفضل",
-        signature:"تم التطوير بواسطة المبرمج المناعي — Manai"
+        imageDesc:"تعلم بالصور"
     },
     en: {
         title:"Choose the application",
@@ -171,13 +212,7 @@ const translations = {
         write:"⌨️ Writing",
         writeDesc:"Test your skills",
         image:"🖼️ Images",
-        imageDesc:"Learn with images",
-        about1:"📚 Non-profit educational platform open to all",
-        about2:"Created as a hobby to learn languages",
-        about3:"🌍 Open source project",
-        about4:"🤝 Knowledge for everyone",
-        about5:"✨ For a better life",
-        signature:"Developed by المبرمج المناعي — Manai"
+        imageDesc:"Learn with images"
     },
     nl: {
         title:"Kies de applicatie",
@@ -186,13 +221,7 @@ const translations = {
         write:"⌨️ Schrijven",
         writeDesc:"Test je vaardigheden",
         image:"🖼️ Afbeeldingen",
-        imageDesc:"Leren met afbeeldingen",
-        about1:"📚 Gratis educatief platform voor iedereen",
-        about2:"Gemaakt als hobby om talen te leren",
-        about3:"🌍 Open source project",
-        about4:"🤝 Kennis voor iedereen",
-        about5:"✨ Voor een beter leven",
-        signature:"Ontwikkeld door المبرمج المناعي — Manaï"
+        imageDesc:"Leren met afbeeldingen"
     }
 };
 
@@ -228,14 +257,6 @@ function applyTranslation(lang){
     document.getElementById("writeDesc").innerText = t.writeDesc;
     document.getElementById("imageTitle").innerText = t.image;
     document.getElementById("imageDesc").innerText = t.imageDesc;
-
-    document.getElementById("about1").innerText = t.about1;
-    document.getElementById("about2").innerText = t.about2;
-    document.getElementById("about3").innerText = t.about3;
-    document.getElementById("about4").innerText = t.about4;
-    document.getElementById("about5").innerText = t.about5;
-
-    document.getElementById("signature").innerText = t.signature;
 }
 
 // تغيير اللغة
