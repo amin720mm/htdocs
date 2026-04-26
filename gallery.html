@@ -13,12 +13,10 @@ body {
     font-family: 'Segoe UI', Tahoma, sans-serif;
 }
 
-/* Navbar */
 .navbar {
     background: linear-gradient(135deg, #4facfe, #00f2fe);
 }
 
-/* Panel */
 .control-panel {
     transition: 0.3s;
 }
@@ -26,7 +24,6 @@ body {
     display: none;
 }
 
-/* الصور */
 .card img { cursor:pointer; }
 .card-img-top {
     aspect-ratio: 1/1;
@@ -49,7 +46,6 @@ body {
     color: #333;
 }
 
-/* أزرار */
 .btn {
     border-radius: 10px;
     transition: 0.2s;
@@ -58,7 +54,6 @@ body {
     transform: scale(1.05);
 }
 
-/* Viewer */
 .viewer {
     position: fixed;
     top:0; left:0;
@@ -97,7 +92,6 @@ body {
     to {opacity:1;}
 }
 
-/* النص */
 .text-style {
     transition: 0.2s;
 }
@@ -106,25 +100,21 @@ body {
 
 <body>
 
-<!-- 🔥 Navbar -->
 <nav class="navbar navbar-dark px-3 shadow">
-    <span class="navbar-brand fw-bold">🖼️ لعبة تخمين الصور</span>
+    <span id="navTitle" class="navbar-brand fw-bold">🖼️ لعبة تخمين الصور</span>
     <button class="btn btn-light btn-sm" onclick="togglePanel()">⚙️</button>
 </nav>
 
-<!-- 🔥 Panel -->
 <div id="panel" class="control-panel container py-3">
 
-    <!-- البحث -->
     <div class="card p-2 mb-2 shadow-sm">
         <div class="d-flex gap-2">
             <input type="text" id="search" class="form-control"
                    placeholder="🔎 ابحث..." oninput="loadGallery()">
-            <button class="btn btn-outline-secondary" onclick="goBack()">⬅</button>
+            <button id="backBtn" class="btn btn-outline-secondary" onclick="goBack()">⬅</button>
         </div>
     </div>
 
-    <!-- التحكم -->
     <div class="card p-2 mb-2 shadow-sm">
         <div class="d-flex flex-wrap gap-2 justify-content-center">
 
@@ -146,14 +136,13 @@ body {
             <button class="btn btn-sm btn-outline-dark" onclick="toggleBold()">B</button>
             <button class="btn btn-sm btn-outline-dark" onclick="toggleItalic()">I</button>
 
-            <button class="btn btn-sm btn-outline-primary" onclick="setAlign('left')">يسار</button>
-            <button class="btn btn-sm btn-outline-primary" onclick="setAlign('center')">وسط</button>
-            <button class="btn btn-sm btn-outline-primary" onclick="setAlign('right')">يمين</button>
+            <button class="btn btn-sm btn-outline-primary" onclick="setAlign('left')" id="leftBtn">يسار</button>
+            <button class="btn btn-sm btn-outline-primary" onclick="setAlign('center')" id="centerBtn">وسط</button>
+            <button class="btn btn-sm btn-outline-primary" onclick="setAlign('right')" id="rightBtn">يمين</button>
 
         </div>
     </div>
 
-    <!-- اللغات -->
     <div class="card p-2 mb-2 shadow-sm">
         <div class="d-flex flex-wrap justify-content-center gap-3">
             <label><input type="checkbox" value="ar" onchange="loadGallery()"> عربي</label>
@@ -164,22 +153,18 @@ body {
         </div>
     </div>
 
-    <!-- الفئات -->
     <select id="category" class="form-select mb-3 shadow-sm" onchange="loadGallery()"></select>
 
 </div>
 
-<!-- المعرض -->
 <div class="container">
     <div class="row g-3" id="gallery"></div>
 </div>
 
-<!-- رجوع -->
 <div class="container">
-    <button class="btn btn-outline-secondary w-100 mt-3" onclick="goBack()">⬅ الرجوع</button>
+    <button id="backBtn2" class="btn btn-outline-secondary w-100 mt-3" onclick="goBack()">⬅ الرجوع</button>
 </div>
 
-<!-- Viewer -->
 <div id="viewer" class="viewer hidden">
     <img id="viewerImg">
     <div id="viewerText"></div>
@@ -190,17 +175,73 @@ body {
 
 <script>
 
-// ✅ تحميل الصور مع دعم JPG و jpg
-function loadImageWithFallback(imgElement, file) {
+// 🌍 الترجمات الكاملة
+const uiTranslations = {
+    ar:{
+        nav:"🖼️ لعبة تخمين الصور",
+        search:"🔎 ابحث...",
+        back:"⬅ الرجوع",
+        left:"يسار",
+        center:"وسط",
+        right:"يمين",
+        all:"كل الفئات"
+    },
+    fr:{
+        nav:"🖼️ Jeu des images",
+        search:"🔎 Rechercher...",
+        back:"⬅ Retour",
+        left:"Gauche",
+        center:"Centre",
+        right:"Droite",
+        all:"Toutes les catégories"
+    },
+    en:{
+        nav:"🖼️ Image Game",
+        search:"🔎 Search...",
+        back:"⬅ Back",
+        left:"Left",
+        center:"Center",
+        right:"Right",
+        all:"All categories"
+    },
+    nl:{
+        nav:"🖼️ Afbeeldingen spel",
+        search:"🔎 Zoeken...",
+        back:"⬅ Terug",
+        left:"Links",
+        center:"Midden",
+        right:"Rechts",
+        all:"Alle categorieën"
+    }
+};
 
+// 🔥 اللغة من index
+function applyGlobalLanguage() {
+    let lang = localStorage.getItem("lang") || "ar";
+
+    document.documentElement.lang = lang;
+    document.body.dir = (lang === "ar") ? "rtl" : "ltr";
+
+    let t = uiTranslations[lang];
+
+    document.getElementById("navTitle").innerText = t.nav;
+    document.getElementById("search").placeholder = t.search;
+    document.getElementById("backBtn").innerText = t.back;
+    document.getElementById("backBtn2").innerText = t.back;
+    document.getElementById("leftBtn").innerText = t.left;
+    document.getElementById("centerBtn").innerText = t.center;
+    document.getElementById("rightBtn").innerText = t.right;
+}
+
+// باقي الكود كما هو 👇
+
+// تحميل الصور
+function loadImageWithFallback(imgElement, file) {
     let base = "./images/";
     let path = base + file;
-
     imgElement.src = path;
-
     imgElement.onerror = function () {
         imgElement.onerror = null;
-
         if (file.endsWith(".jpg")) {
             imgElement.src = base + file.replace(".jpg", ".JPG");
         } else if (file.endsWith(".JPG")) {
@@ -209,7 +250,6 @@ function loadImageWithFallback(imgElement, file) {
     };
 }
 
-// 🔥 toggle panel
 function togglePanel(){
     document.getElementById("panel").classList.toggle("hidden");
 }
@@ -228,9 +268,12 @@ function loadCategories() {
     const select = document.getElementById("category");
     select.innerHTML = "";
 
+    let lang = localStorage.getItem("lang") || "ar";
+    let t = uiTranslations[lang];
+
     let optionAll = document.createElement("option");
     optionAll.value = "all";
-    optionAll.textContent = "كل الفئات";
+    optionAll.textContent = t.all;
     select.appendChild(optionAll);
 
     let categories = [];
@@ -359,9 +402,11 @@ function goBack() {
 }
 
 window.onload = () => {
+    applyGlobalLanguage();
     loadCategories();
     loadGallery();
 };
+
 </script>
 
 </body>

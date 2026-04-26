@@ -118,9 +118,19 @@ function saveLanguage(lang){
     localStorage.setItem("lang", lang);
 }
 
+// 🔥 🔥 🔥 الجديد (مهم جدا)
+function getLanguage(){
+    return localStorage.getItem("lang") || "fr";
+}
+
 // 📥 تحميل اللغة (افتراضي فرنسي)
 function loadLanguage(){
-    let lang = localStorage.getItem("lang") || "fr";
+    let lang = getLanguage();
+
+    // 🔥 إضافة دعم الاتجاه
+    document.documentElement.lang = lang;
+    document.body.dir = (lang === "ar") ? "rtl" : "ltr";
+
     document.querySelector(`input[name="lang"][value="${lang}"]`).checked = true;
     applyTranslation(lang);
 }
