@@ -1,7 +1,11 @@
 const imagesData = [
 
 /* ================= ROOM ================= */
-
+{
+  file: "woonkamer.jpg",
+  category: "Home-and-surroundings",
+  answers: { ar: "غرفة المعيشة", fr: "salon", en: "living room", nl: "woonkamer", de: "Wohnzimmer" }
+},
 {
   file: "deken.jpg",
   category: "Room-components",
