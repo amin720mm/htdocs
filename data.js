@@ -123,7 +123,7 @@ const imagesData = [
 
 {
   file: "woonkamer.jpg",
-  category: "Home-and-surroundings",
+  category: "Room-components",
   answers: { ar: "غرفة المعيشة", fr: "salon", en: "living room", nl: "woonkamer", de: "Wohnzimmer" }
 },
 {
