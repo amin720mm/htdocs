@@ -21,6 +21,30 @@ body {
 .card:hover {
     transform: scale(1.05);
 }
+
+/* 🌟 Footer أنيق */
+.footer-box {
+    margin-top: 40px;
+    background: rgba(255,255,255,0.95);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    backdrop-filter: blur(10px);
+}
+
+.footer-box p {
+    margin: 5px 0;
+}
+
+.footer-title {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.footer-end {
+    font-weight: bold;
+    color: #0d6efd;
+}
 </style>
 
 </head>
@@ -67,6 +91,31 @@ body {
 
 </div>
 
+<!-- 🌟 النص الجميل -->
+<div class="footer-box mt-4">
+
+<p id="about1" class="footer-title">
+📚 هذا الموقع وسيلة تعليمية غير ربحية ومفتوحة للعموم
+</p>
+
+<p id="about2">
+تم إنشاؤه كهواية شخصية بهدف تعلم اللغات وتطوير المهارات
+</p>
+
+<p id="about3">
+🌍 المشروع مفتوح المصدر ويمكن للجميع التعلم منه والاستفادة منه
+</p>
+
+<p id="about4">
+🤝 المعرفة حق للجميع دون قيود
+</p>
+
+<p id="about5" class="footer-end">
+✨ من أجل حياة أفضل
+</p>
+
+</div>
+
 </div>
 
 <script src="js/bootstrap.bundle.min.js"></script>
@@ -82,7 +131,12 @@ const translations = {
         write:"⌨️ Écriture",
         writeDesc:"Testez vos compétences",
         image:"🖼️ Images",
-        imageDesc:"Apprendre avec les images"
+        imageDesc:"Apprendre avec les images",
+        about1:"📚 Ce site est une plateforme éducative gratuite et ouverte à tous",
+        about2:"Créé comme un hobby pour apprendre les langues et développer mes compétences",
+        about3:"🌍 Projet open source accessible à tous",
+        about4:"🤝 Le savoir est un droit pour tous",
+        about5:"✨ Pour une vie meilleure"
     },
     ar: {
         title:"إختر التطبيق المناسب",
@@ -91,7 +145,12 @@ const translations = {
         write:"⌨️ الكتابة",
         writeDesc:"اختبر مهارتك",
         image:"🖼️ الصور",
-        imageDesc:"تعلم بالصور"
+        imageDesc:"تعلم بالصور",
+        about1:"📚 هذا الموقع وسيلة تعليمية غير ربحية ومفتوحة للعموم",
+        about2:"تم إنشاؤه كهواية شخصية بهدف تعلم اللغات وتطوير المهارات",
+        about3:"🌍 المشروع مفتوح المصدر ويمكن للجميع التعلم منه",
+        about4:"🤝 المعرفة حق للجميع دون قيود",
+        about5:"✨ من أجل حياة أفضل"
     },
     en: {
         title:"Choose the application",
@@ -100,7 +159,12 @@ const translations = {
         write:"⌨️ Writing",
         writeDesc:"Test your skills",
         image:"🖼️ Images",
-        imageDesc:"Learn with images"
+        imageDesc:"Learn with images",
+        about1:"📚 This is a non-profit educational platform open to everyone",
+        about2:"Created as a hobby to learn languages and improve skills",
+        about3:"🌍 Open source project accessible to all",
+        about4:"🤝 Knowledge should be available to everyone",
+        about5:"✨ For a better life"
     },
     nl: {
         title:"Kies de applicatie",
@@ -109,7 +173,12 @@ const translations = {
         write:"⌨️ Schrijven",
         writeDesc:"Test je vaardigheden",
         image:"🖼️ Afbeeldingen",
-        imageDesc:"Leren met afbeeldingen"
+        imageDesc:"Leren met afbeeldingen",
+        about1:"📚 Deze website is een gratis educatief platform voor iedereen",
+        about2:"Gemaakt als hobby om talen te leren en vaardigheden te ontwikkelen",
+        about3:"🌍 Open source project voor iedereen",
+        about4:"🤝 Kennis moet voor iedereen beschikbaar zijn",
+        about5:"✨ Voor een beter leven"
     }
 };
 
@@ -118,16 +187,15 @@ function saveLanguage(lang){
     localStorage.setItem("lang", lang);
 }
 
-// 🔥 🔥 🔥 الجديد (مهم جدا)
+// 🔥 جلب اللغة
 function getLanguage(){
     return localStorage.getItem("lang") || "fr";
 }
 
-// 📥 تحميل اللغة (افتراضي فرنسي)
+// 📥 تحميل اللغة
 function loadLanguage(){
     let lang = getLanguage();
 
-    // 🔥 إضافة دعم الاتجاه
     document.documentElement.lang = lang;
     document.body.dir = (lang === "ar") ? "rtl" : "ltr";
 
@@ -146,6 +214,13 @@ function applyTranslation(lang){
     document.getElementById("writeDesc").innerText = t.writeDesc;
     document.getElementById("imageTitle").innerText = t.image;
     document.getElementById("imageDesc").innerText = t.imageDesc;
+
+    // 🌟 ترجمة النص الجميل
+    document.getElementById("about1").innerText = t.about1;
+    document.getElementById("about2").innerText = t.about2;
+    document.getElementById("about3").innerText = t.about3;
+    document.getElementById("about4").innerText = t.about4;
+    document.getElementById("about5").innerText = t.about5;
 }
 
 // تغيير اللغة
@@ -156,7 +231,7 @@ document.querySelectorAll("input[name='lang']").forEach(radio=>{
     });
 });
 
-// 🔥 حل المسارات
+// 🔥 التنقل
 function goToGame(page) {
 
     let basePath = "";
