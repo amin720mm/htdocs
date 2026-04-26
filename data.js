@@ -200,9 +200,9 @@ const imagesData = [
   file: "boek.jpg",
   category: "School-tools",
   answers: { ar: "كتاب", fr: "livre", en: "book", nl: "boek", de: "buch" }
-},
+}
 
-/* ================= Room-components ================= */
+/* ================= Room-components 
 
 {
   file: "matras.jpg",
@@ -240,7 +240,7 @@ const imagesData = [
   }
 },
 
-/* ================= Home-and-surroundings ================= */
+
 
 {
   file: "badkamer.jpg",
@@ -330,6 +330,6 @@ const imagesData = [
   file: "woonkamer.jpg",
   category: "Home-and-surroundings",
   answers: { ar: "غرفة المعيشة", fr: "salon", en: "living room", nl: "woonkamer", de: "Wohnzimmer" }
-}
+} ================= */
 
 ];
