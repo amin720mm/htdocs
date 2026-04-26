@@ -52,7 +52,6 @@ body {
 
 <body>
 
-<!-- ✅ Navbar رجعناه -->
 <nav class="navbar navbar-dark px-3 shadow">
     <span class="navbar-brand fw-bold">🖼️ لعبة تخمين الصور</span>
     <button class="btn btn-light btn-sm" onclick="goBack()">⬅</button>
@@ -63,7 +62,16 @@ body {
 
 <h4 class="text-center mb-3">🎮 لعبة تخمين الصور</h4>
 
-<!-- ✅ مستوى -->
+<!-- 🌍 اختيار اللغة داخل اللعبة -->
+<select id="gameLang" class="form-select mb-2">
+<option value="ar">العربية</option>
+<option value="fr">Français</option>
+<option value="en">English</option>
+<option value="nl">Nederlands</option>
+<option value="de">Deutsch</option>
+</select>
+
+<!-- مستوى -->
 <select id="difficulty" class="form-select mb-2">
 <option value="easy">سهل</option>
 <option value="medium">متوسط</option>
@@ -86,7 +94,6 @@ body {
 <button id="nextBtn" class="btn btn-info w-100 mt-2 d-none"
 onclick="startGame()">السؤال التالي ▶</button>
 
-<!-- ✅ زر رجوع -->
 <button class="btn btn-outline-secondary w-100 mt-3" onclick="goBack()">⬅ الرجوع</button>
 
 </div>
@@ -109,9 +116,22 @@ let correctAnswer;
 let score = parseInt(localStorage.getItem("score")) || 0;
 let level = parseInt(localStorage.getItem("level")) || 1;
 
-updateScore();
+// 🔥 لغة اللعبة (مستقلة)
+let gameLang = localStorage.getItem("gameLang") || localStorage.getItem("lang") || "ar";
 
-// ✅ حل مشكلة الصور (JPG / jpg)
+// 🧠 عند فتح الصفحة
+window.onload = () => {
+    document.getElementById("gameLang").value = gameLang;
+    updateScore();
+};
+
+// 🔄 تغيير اللغة داخل اللعبة
+document.getElementById("gameLang").onchange = function(){
+    gameLang = this.value;
+    localStorage.setItem("gameLang", gameLang);
+};
+
+// ✅ الصور
 function loadImage(file){
     let img = document.getElementById("image");
     let base = "images/";
@@ -130,20 +150,19 @@ function loadImage(file){
 // 🎮 بدء اللعبة
 function startGame(){
 
-    let lang = localStorage.getItem("lang") || "ar";
     let difficulty = document.getElementById("difficulty").value;
 
     current = data[Math.floor(Math.random()*data.length)];
 
-    loadImage(current.file); // ✅ استبدلنا src
+    loadImage(current.file);
 
-    correctAnswer=current.answers[lang]||"";
+    correctAnswer=current.answers[gameLang]||"";
 
     let choicesCount = 3;
     if(difficulty==="medium") choicesCount = 4;
     if(difficulty==="hard") choicesCount = 6;
 
-    generateChoices(lang, choicesCount);
+    generateChoices(gameLang, choicesCount);
 
     document.getElementById("hint").innerText =
         "عدد الحروف: "+correctAnswer.length;
