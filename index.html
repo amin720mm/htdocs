@@ -13,37 +13,58 @@ body {
     min-height: 100vh;
 }
 
+/* الكروت */
 .card {
     cursor: pointer;
     transition: 0.3s;
 }
-
 .card:hover {
     transform: scale(1.05);
 }
 
-/* 🌟 Footer أنيق */
+/* 🌟 VIP Footer */
 .footer-box {
     margin-top: 40px;
-    background: rgba(255,255,255,0.95);
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    backdrop-filter: blur(10px);
+    border-radius: 25px;
+    padding: 25px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    color: white;
+    animation: fadeUp 1s ease;
+}
+
+/* ✨ تأثير ظهور */
+@keyframes fadeUp {
+    from { opacity:0; transform: translateY(30px);}
+    to { opacity:1; transform: translateY(0);}
 }
 
 .footer-box p {
-    margin: 5px 0;
+    margin: 6px 0;
 }
 
-.footer-title {
+/* 🔥 توقيع */
+.signature {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.3);
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.signature span {
     font-weight: bold;
-    font-size: 18px;
+    color: #ffd700;
+    text-shadow: 0 0 8px rgba(255,215,0,0.7);
 }
 
+/* ✨ النهاية */
 .footer-end {
+    margin-top: 10px;
     font-weight: bold;
-    color: #0d6efd;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255,255,255,0.8);
 }
 </style>
 
@@ -65,7 +86,6 @@ body {
 
 <div class="row g-3">
 
-<!-- 🖼️ معرض -->
 <div class="col-12">
     <div class="card shadow-lg p-3 border-0" onclick="goToGame('gallery.html')">
         <h4 id="galleryTitle">🖼️ عرض كل الصور</h4>
@@ -73,7 +93,6 @@ body {
     </div>
 </div>
 
-<!-- ⌨️ كتابة -->
 <div class="col-6">
     <div class="card shadow p-3 border-0" onclick="goToGame('game2.html')">
         <h5 id="writeTitle">⌨️ الكتابة</h5>
@@ -81,7 +100,6 @@ body {
     </div>
 </div>
 
-<!-- 🖼️ الصور -->
 <div class="col-6">
     <div class="card shadow p-3 border-0" onclick="goToGame('game1.html')">
         <h5 id="imageTitle">🖼️ الصور</h5>
@@ -91,28 +109,20 @@ body {
 
 </div>
 
-<!-- 🌟 النص الجميل -->
+<!-- 🌟 VIP Footer -->
 <div class="footer-box mt-4">
 
-<p id="about1" class="footer-title">
-📚 هذا الموقع وسيلة تعليمية غير ربحية ومفتوحة للعموم
-</p>
+<p id="about1">📚 هذا الموقع وسيلة تعليمية غير ربحية ومفتوحة للعموم</p>
+<p id="about2">تم إنشاؤه كهواية لتعلم اللغات وتطوير المهارات</p>
+<p id="about3">🌍 مشروع مفتوح المصدر للجميع</p>
+<p id="about4">🤝 المعرفة حق للجميع</p>
 
-<p id="about2">
-تم إنشاؤه كهواية شخصية بهدف تعلم اللغات وتطوير المهارات
-</p>
+<!-- ✍️ التوقيع -->
+<div class="signature" id="signature">
+    تم التطوير بواسطة <span>المبرمج المناعي</span> — Manai / Manaï
+</div>
 
-<p id="about3">
-🌍 المشروع مفتوح المصدر ويمكن للجميع التعلم منه والاستفادة منه
-</p>
-
-<p id="about4">
-🤝 المعرفة حق للجميع دون قيود
-</p>
-
-<p id="about5" class="footer-end">
-✨ من أجل حياة أفضل
-</p>
+<p id="about5" class="footer-end">✨ من أجل حياة أفضل</p>
 
 </div>
 
@@ -122,7 +132,7 @@ body {
 
 <script>
 
-// 🌍 الترجمات
+// 🌍 الترجمات (محدثة)
 const translations = {
     fr: {
         title:"Choisissez l'application",
@@ -132,11 +142,12 @@ const translations = {
         writeDesc:"Testez vos compétences",
         image:"🖼️ Images",
         imageDesc:"Apprendre avec les images",
-        about1:"📚 Ce site est une plateforme éducative gratuite et ouverte à tous",
-        about2:"Créé comme un hobby pour apprendre les langues et développer mes compétences",
-        about3:"🌍 Projet open source accessible à tous",
-        about4:"🤝 Le savoir est un droit pour tous",
-        about5:"✨ Pour une vie meilleure"
+        about1:"📚 Plateforme éducative gratuite et ouverte à tous",
+        about2:"Créée comme un hobby pour apprendre les langues",
+        about3:"🌍 Projet open source",
+        about4:"🤝 Le savoir pour tous",
+        about5:"✨ Pour une vie meilleure",
+        signature:"Développé par المبرمج المناعي — Manai"
     },
     ar: {
         title:"إختر التطبيق المناسب",
@@ -147,10 +158,11 @@ const translations = {
         image:"🖼️ الصور",
         imageDesc:"تعلم بالصور",
         about1:"📚 هذا الموقع وسيلة تعليمية غير ربحية ومفتوحة للعموم",
-        about2:"تم إنشاؤه كهواية شخصية بهدف تعلم اللغات وتطوير المهارات",
-        about3:"🌍 المشروع مفتوح المصدر ويمكن للجميع التعلم منه",
-        about4:"🤝 المعرفة حق للجميع دون قيود",
-        about5:"✨ من أجل حياة أفضل"
+        about2:"تم إنشاؤه كهواية لتعلم اللغات وتطوير المهارات",
+        about3:"🌍 المشروع مفتوح المصدر",
+        about4:"🤝 المعرفة حق للجميع",
+        about5:"✨ من أجل حياة أفضل",
+        signature:"تم التطوير بواسطة المبرمج المناعي — Manai"
     },
     en: {
         title:"Choose the application",
@@ -160,11 +172,12 @@ const translations = {
         writeDesc:"Test your skills",
         image:"🖼️ Images",
         imageDesc:"Learn with images",
-        about1:"📚 This is a non-profit educational platform open to everyone",
-        about2:"Created as a hobby to learn languages and improve skills",
-        about3:"🌍 Open source project accessible to all",
-        about4:"🤝 Knowledge should be available to everyone",
-        about5:"✨ For a better life"
+        about1:"📚 Non-profit educational platform open to all",
+        about2:"Created as a hobby to learn languages",
+        about3:"🌍 Open source project",
+        about4:"🤝 Knowledge for everyone",
+        about5:"✨ For a better life",
+        signature:"Developed by المبرمج المناعي — Manai"
     },
     nl: {
         title:"Kies de applicatie",
@@ -174,25 +187,26 @@ const translations = {
         writeDesc:"Test je vaardigheden",
         image:"🖼️ Afbeeldingen",
         imageDesc:"Leren met afbeeldingen",
-        about1:"📚 Deze website is een gratis educatief platform voor iedereen",
-        about2:"Gemaakt als hobby om talen te leren en vaardigheden te ontwikkelen",
-        about3:"🌍 Open source project voor iedereen",
-        about4:"🤝 Kennis moet voor iedereen beschikbaar zijn",
-        about5:"✨ Voor een beter leven"
+        about1:"📚 Gratis educatief platform voor iedereen",
+        about2:"Gemaakt als hobby om talen te leren",
+        about3:"🌍 Open source project",
+        about4:"🤝 Kennis voor iedereen",
+        about5:"✨ Voor een beter leven",
+        signature:"Ontwikkeld door المبرمج المناعي — Manaï"
     }
 };
 
-// 💾 حفظ اللغة
+// حفظ اللغة
 function saveLanguage(lang){
     localStorage.setItem("lang", lang);
 }
 
-// 🔥 جلب اللغة
+// جلب اللغة
 function getLanguage(){
     return localStorage.getItem("lang") || "fr";
 }
 
-// 📥 تحميل اللغة
+// تحميل اللغة
 function loadLanguage(){
     let lang = getLanguage();
 
@@ -203,7 +217,7 @@ function loadLanguage(){
     applyTranslation(lang);
 }
 
-// 🌍 تطبيق الترجمة
+// تطبيق الترجمة
 function applyTranslation(lang){
     let t = translations[lang];
 
@@ -215,12 +229,13 @@ function applyTranslation(lang){
     document.getElementById("imageTitle").innerText = t.image;
     document.getElementById("imageDesc").innerText = t.imageDesc;
 
-    // 🌟 ترجمة النص الجميل
     document.getElementById("about1").innerText = t.about1;
     document.getElementById("about2").innerText = t.about2;
     document.getElementById("about3").innerText = t.about3;
     document.getElementById("about4").innerText = t.about4;
     document.getElementById("about5").innerText = t.about5;
+
+    document.getElementById("signature").innerText = t.signature;
 }
 
 // تغيير اللغة
@@ -231,7 +246,7 @@ document.querySelectorAll("input[name='lang']").forEach(radio=>{
     });
 });
 
-// 🔥 التنقل
+// التنقل
 function goToGame(page) {
 
     let basePath = "";
@@ -245,7 +260,7 @@ function goToGame(page) {
     window.location.href = basePath + page;
 }
 
-// 🚀 تشغيل
+// تشغيل
 window.onload = loadLanguage;
 
 </script>
