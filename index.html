@@ -247,8 +247,9 @@ function loadLanguage(){
     applyTranslation(lang);
 }
 
-// تنقل
+// 🔥 تنقل (تمت إضافة الحماية فقط)
 function goToGame(page){
+    sessionStorage.setItem("fromIndex", "true"); // ✅ الإضافة الوحيدة
     window.location.href=page;
 }
 

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
@@ -96,6 +97,7 @@ body {
     transition: 0.2s;
 }
 </style>
+
 </head>
 
 <body>
@@ -107,53 +109,55 @@ body {
 
 <div id="panel" class="control-panel container py-3">
 
-    <div class="card p-2 mb-2 shadow-sm">
-        <div class="d-flex gap-2">
-            <input type="text" id="search" class="form-control"
-                   placeholder="🔎 ابحث..." oninput="loadGallery()">
-            <button id="backBtn" class="btn btn-outline-secondary" onclick="goBack()">⬅</button>
-        </div>
+```
+<div class="card p-2 mb-2 shadow-sm">
+    <div class="d-flex gap-2">
+        <input type="text" id="search" class="form-control"
+               placeholder="🔎 ابحث..." oninput="loadGallery()">
+        <button id="backBtn" class="btn btn-outline-secondary" onclick="goBack()">⬅</button>
     </div>
+</div>
 
-    <div class="card p-2 mb-2 shadow-sm">
-        <div class="d-flex flex-wrap gap-2 justify-content-center">
+<div class="card p-2 mb-2 shadow-sm">
+    <div class="d-flex flex-wrap gap-2 justify-content-center">
 
-            <select id="fontSelect" class="form-select form-select-sm" style="width:auto">
-                <option value="default">الخط</option>
-                <option value="arial">Arial</option>
-                <option value="tahoma">Tahoma</option>
-                <option value="monospace">Mono</option>
-            </select>
+        <select id="fontSelect" class="form-select form-select-sm" style="width:auto">
+            <option value="default">الخط</option>
+            <option value="arial">Arial</option>
+            <option value="tahoma">Tahoma</option>
+            <option value="monospace">Mono</option>
+        </select>
 
-            <select id="sizeSelect" class="form-select form-select-sm" style="width:auto">
-                <option value="14">صغير</option>
-                <option value="16" selected>متوسط</option>
-                <option value="20">كبير</option>
-            </select>
+        <select id="sizeSelect" class="form-select form-select-sm" style="width:auto">
+            <option value="14">صغير</option>
+            <option value="16" selected>متوسط</option>
+            <option value="20">كبير</option>
+        </select>
 
-            <input type="color" id="colorPicker" style="width:40px;height:35px">
+        <input type="color" id="colorPicker" style="width:40px;height:35px">
 
-            <button class="btn btn-sm btn-outline-dark" onclick="toggleBold()">B</button>
-            <button class="btn btn-sm btn-outline-dark" onclick="toggleItalic()">I</button>
+        <button class="btn btn-sm btn-outline-dark" onclick="toggleBold()">B</button>
+        <button class="btn btn-sm btn-outline-dark" onclick="toggleItalic()">I</button>
 
-            <button class="btn btn-sm btn-outline-primary" onclick="setAlign('left')" id="leftBtn">يسار</button>
-            <button class="btn btn-sm btn-outline-primary" onclick="setAlign('center')" id="centerBtn">وسط</button>
-            <button class="btn btn-sm btn-outline-primary" onclick="setAlign('right')" id="rightBtn">يمين</button>
+        <button class="btn btn-sm btn-outline-primary" onclick="setAlign('left')" id="leftBtn">يسار</button>
+        <button class="btn btn-sm btn-outline-primary" onclick="setAlign('center')" id="centerBtn">وسط</button>
+        <button class="btn btn-sm btn-outline-primary" onclick="setAlign('right')" id="rightBtn">يمين</button>
 
-        </div>
     </div>
+</div>
 
-    <div class="card p-2 mb-2 shadow-sm">
-        <div class="d-flex flex-wrap justify-content-center gap-3">
-            <label><input type="checkbox" value="ar" onchange="loadGallery()"> عربي</label>
-            <label><input type="checkbox" value="fr" onchange="loadGallery()"> Français</label>
-            <label><input type="checkbox" value="en" checked onchange="loadGallery()"> English</label>
-            <label><input type="checkbox" value="nl" checked onchange="loadGallery()"> Nederlands</label>
-            <label><input type="checkbox" value="de" onchange="loadGallery()"> Deutsch</label>
-        </div>
+<div class="card p-2 mb-2 shadow-sm">
+    <div class="d-flex flex-wrap justify-content-center gap-3">
+        <label><input type="checkbox" value="ar" onchange="loadGallery()"> عربي</label>
+        <label><input type="checkbox" value="fr" onchange="loadGallery()"> Français</label>
+        <label><input type="checkbox" value="en" checked onchange="loadGallery()"> English</label>
+        <label><input type="checkbox" value="nl" checked onchange="loadGallery()"> Nederlands</label>
+        <label><input type="checkbox" value="de" onchange="loadGallery()"> Deutsch</label>
     </div>
+</div>
 
-    <select id="category" class="form-select mb-3 shadow-sm" onchange="loadGallery()"></select>
+<select id="category" class="form-select mb-3 shadow-sm" onchange="loadGallery()"></select>
+```
 
 </div>
 
@@ -171,9 +175,15 @@ body {
 </div>
 
 <script src="data.js?v=999"></script>
+
 <script src="js/bootstrap.bundle.min.js"></script>
 
 <script>
+
+// 🔥 منع الدخول المباشر (الإضافة الوحيدة)
+if(!sessionStorage.getItem("fromIndex")){
+    window.location.href = "index.html";
+}
 
 // 🌍 الترجمات الكاملة
 const uiTranslations = {
@@ -234,8 +244,6 @@ function applyGlobalLanguage() {
 }
 
 // باقي الكود كما هو 👇
-
-// تحميل الصور
 function loadImageWithFallback(imgElement, file) {
     let base = "./images/";
     let path = base + file;
