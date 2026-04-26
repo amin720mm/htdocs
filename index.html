@@ -149,11 +149,11 @@ body {
 
 </div>
 
-<!-- 🔥 Contact Section (تمت الإضافة) -->
+<!-- 🔥 Contact Section -->
 <div class="contact-box">
-    <h4>📩 تواصل معنا</h4>
-    <p>لأي اقتراح أو استفسار، يمكنك مراسلتنا عبر البريد الإلكتروني:</p>
-    <a href="mailto:mohamed.amin@themanai.com">
+    <h4 id="contactTitle">📩 تواصل معنا</h4>
+    <p id="contactText">لأي اقتراح أو استفسار، يمكنك مراسلتنا عبر البريد الإلكتروني:</p>
+    <a href="mailto:mohamed.amin@themanai.com" id="contactEmail">
         mohamed.amin@themanai.com
     </a>
 </div>
@@ -189,7 +189,9 @@ const translations = {
         about2:"Créée comme hobby pour apprendre les langues",
         about3:"🌍 Projet open source",
         about4:"🤝 Le savoir pour tous",
-        about5:"✨ Pour une vie meilleure"
+        about5:"✨ Pour une vie meilleure",
+        contactTitle:"📩 Contactez-nous",
+        contactText:"Pour toute suggestion ou question, contactez-nous par email :"
     },
     ar:{
         title:"إختر التطبيق المناسب",
@@ -203,7 +205,9 @@ const translations = {
         about2:"تم إنشاؤه كهواية لتعلم اللغات",
         about3:"🌍 مشروع مفتوح المصدر",
         about4:"🤝 المعرفة للجميع",
-        about5:"✨ من أجل حياة أفضل"
+        about5:"✨ من أجل حياة أفضل",
+        contactTitle:"📩 تواصل معنا",
+        contactText:"لأي اقتراح أو استفسار، يمكنك مراسلتنا عبر البريد الإلكتروني:"
     },
     en:{
         title:"Choose the application",
@@ -217,7 +221,9 @@ const translations = {
         about2:"Created as a hobby to learn languages",
         about3:"🌍 Open source project",
         about4:"🤝 Knowledge for everyone",
-        about5:"✨ For a better life"
+        about5:"✨ For a better life",
+        contactTitle:"📩 Contact us",
+        contactText:"For any suggestion or question, email us at:"
     },
     nl:{
         title:"Kies de applicatie",
@@ -231,7 +237,9 @@ const translations = {
         about2:"Gemaakt als hobby om talen te leren",
         about3:"🌍 Open source project",
         about4:"🤝 Kennis voor iedereen",
-        about5:"✨ Voor een beter leven"
+        about5:"✨ Voor een beter leven",
+        contactTitle:"📩 Neem contact op",
+        contactText:"Voor vragen of suggesties, stuur een email naar:"
     }
 };
 
@@ -264,6 +272,10 @@ function applyTranslation(lang){
     document.getElementById("about3").innerText=t.about3;
     document.getElementById("about4").innerText=t.about4;
     document.getElementById("about5").innerText=t.about5;
+
+    // 🔥 الإضافة الوحيدة
+    document.getElementById("contactTitle").innerText=t.contactTitle;
+    document.getElementById("contactText").innerText=t.contactText;
 }
 
 // تغيير اللغة
