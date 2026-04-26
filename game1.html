@@ -13,12 +13,10 @@ body {
     font-family: 'Segoe UI', Tahoma, sans-serif;
 }
 
-/* Navbar */
 .navbar {
     background: linear-gradient(135deg, #4facfe, #00f2fe);
 }
 
-/* صورة */
 .game-img {
     width:100%;
     max-width:300px;
@@ -31,7 +29,6 @@ body {
     display:block;
 }
 
-/* تأثيرات */
 .correct-anim { animation: pop 0.4s; }
 @keyframes pop { from{transform:scale(0.7);} to{transform:scale(1);} }
 
@@ -53,16 +50,15 @@ body {
 <body>
 
 <nav class="navbar navbar-dark px-3 shadow">
-    <span class="navbar-brand fw-bold">🖼️ لعبة تخمين الصور</span>
-    <button class="btn btn-light btn-sm" onclick="goBack()">⬅</button>
+    <span id="navTitle" class="navbar-brand fw-bold">🖼️ لعبة تخمين الصور</span>
+    <button id="backTop" class="btn btn-light btn-sm" onclick="goBack()">⬅</button>
 </nav>
 
 <div class="container py-4">
 <div class="card shadow p-3">
 
-<h4 class="text-center mb-3">🎮 لعبة تخمين الصور</h4>
+<h4 id="gameTitle" class="text-center mb-3">🎮 لعبة تخمين الصور</h4>
 
-<!-- 🌍 اختيار اللغة داخل اللعبة -->
 <select id="gameLang" class="form-select mb-2">
 <option value="ar">العربية</option>
 <option value="fr">Français</option>
@@ -71,14 +67,13 @@ body {
 <option value="de">Deutsch</option>
 </select>
 
-<!-- مستوى -->
 <select id="difficulty" class="form-select mb-2">
 <option value="easy">سهل</option>
 <option value="medium">متوسط</option>
 <option value="hard">صعب</option>
 </select>
 
-<button class="btn btn-success w-100 mb-3" onclick="startGame()">ابدأ ▶</button>
+<button id="startBtn" class="btn btn-success w-100 mb-3" onclick="startGame()">ابدأ ▶</button>
 
 <p id="score" class="text-center fw-bold">النقاط: 0</p>
 <p id="level" class="text-center text-primary fw-bold">Level: 1</p>
@@ -94,7 +89,7 @@ body {
 <button id="nextBtn" class="btn btn-info w-100 mt-2 d-none"
 onclick="startGame()">السؤال التالي ▶</button>
 
-<button class="btn btn-outline-secondary w-100 mt-3" onclick="goBack()">⬅ الرجوع</button>
+<button id="backBtn" class="btn btn-outline-secondary w-100 mt-3" onclick="goBack()">⬅ الرجوع</button>
 
 </div>
 </div>
@@ -103,35 +98,89 @@ onclick="startGame()">السؤال التالي ▶</button>
 
 <script>
 
+// 🌍 ترجمة الواجهة
+const uiText = {
+ar:{
+nav:"🖼️ لعبة تخمين الصور",
+start:"ابدأ ▶",
+next:"السؤال التالي ▶",
+back:"⬅ الرجوع",
+score:"النقاط",
+easy:"سهل",
+medium:"متوسط",
+hard:"صعب"
+},
+fr:{
+nav:"🖼️ Jeu d'images",
+start:"Commencer ▶",
+next:"Suivant ▶",
+back:"⬅ Retour",
+score:"Score",
+easy:"Facile",
+medium:"Moyen",
+hard:"Difficile"
+},
+en:{
+nav:"🖼️ Image Game",
+start:"Start ▶",
+next:"Next ▶",
+back:"⬅ Back",
+score:"Score",
+easy:"Easy",
+medium:"Medium",
+hard:"Hard"
+}
+};
+
+// 🔥 تطبيق لغة الصفحة
+function applyUILanguage(){
+    let lang = localStorage.getItem("lang") || "ar";
+    let t = uiText[lang] || uiText.ar;
+
+    document.documentElement.lang = lang;
+    document.body.dir = (lang==="ar") ? "rtl" : "ltr";
+
+    document.getElementById("navTitle").innerText = t.nav;
+    document.getElementById("startBtn").innerText = t.start;
+    document.getElementById("nextBtn").innerText = t.next;
+    document.getElementById("backBtn").innerText = t.back;
+    document.getElementById("backTop").innerText = t.back;
+
+    document.getElementById("score").innerText = t.score + ": " + score;
+
+    // ترجمة الصعوبة
+    let diff = document.getElementById("difficulty");
+    diff.options[0].text = t.easy;
+    diff.options[1].text = t.medium;
+    diff.options[2].text = t.hard;
+}
+
 // 🔊 أصوات
 let correctSound = new Audio("sounds/correct.mp3");
 let wrongSound = new Audio("sounds/wrong.mp3");
 
-// 🎯 بيانات
 let data = imagesData;
 let current;
 let correctAnswer;
 
-// 💾 نقاط
 let score = parseInt(localStorage.getItem("score")) || 0;
 let level = parseInt(localStorage.getItem("level")) || 1;
 
-// 🔥 لغة اللعبة (مستقلة)
 let gameLang = localStorage.getItem("gameLang") || localStorage.getItem("lang") || "ar";
 
-// 🧠 عند فتح الصفحة
+// 🧠 عند التشغيل
 window.onload = () => {
     document.getElementById("gameLang").value = gameLang;
     updateScore();
+    applyUILanguage(); // 🔥 هنا الترجمة
 };
 
-// 🔄 تغيير اللغة داخل اللعبة
 document.getElementById("gameLang").onchange = function(){
     gameLang = this.value;
     localStorage.setItem("gameLang", gameLang);
 };
 
-// ✅ الصور
+// الصور
 function loadImage(file){
     let img = document.getElementById("image");
     let base = "images/";
@@ -147,7 +196,7 @@ function loadImage(file){
     };
 }
 
-// 🎮 بدء اللعبة
+// اللعبة
 function startGame(){
 
     let difficulty = document.getElementById("difficulty").value;
@@ -158,11 +207,11 @@ function startGame(){
 
     correctAnswer=current.answers[gameLang]||"";
 
-    let choicesCount = 3;
-    if(difficulty==="medium") choicesCount = 4;
-    if(difficulty==="hard") choicesCount = 6;
+    let count = 3;
+    if(difficulty==="medium") count=4;
+    if(difficulty==="hard") count=6;
 
-    generateChoices(gameLang, choicesCount);
+    generateChoices(gameLang, count);
 
     document.getElementById("hint").innerText =
         "عدد الحروف: "+correctAnswer.length;
@@ -171,7 +220,6 @@ function startGame(){
     document.getElementById("nextBtn").classList.add("d-none");
 }
 
-// 🔘 اختيارات
 function generateChoices(lang, count){
 
     let div=document.getElementById("choices");
@@ -180,7 +228,7 @@ function generateChoices(lang, count){
     let answers=[correctAnswer];
 
     while(answers.length < count){
-        let r = data[Math.floor(Math.random()*data.length)].answers[lang];
+        let r=data[Math.floor(Math.random()*data.length)].answers[lang];
         if(r && !answers.includes(r)) answers.push(r);
     }
 
@@ -195,7 +243,6 @@ function generateChoices(lang, count){
     });
 }
 
-// ✅ تحقق
 function checkAnswer(selected){
 
     let result=document.getElementById("result");
@@ -215,18 +262,11 @@ function checkAnswer(selected){
 
     if(selected===correctAnswer){
         result.innerText="✅ صحيح!";
-        result.className="text-success";
-
         score++;
         correctSound.play();
-
-        if(score % 5 === 0){
-            level++;
-        }
-
+        if(score % 5 === 0) level++;
     }else{
         result.innerText="❌ خطأ!";
-        result.className="text-danger";
         wrongSound.play();
     }
 
@@ -234,17 +274,16 @@ function checkAnswer(selected){
     localStorage.setItem("level", level);
 
     updateScore();
+    applyUILanguage(); // 🔥 تحديث النصوص
 
     document.getElementById("nextBtn").classList.remove("d-none");
 }
 
-// 📊 تحديث
 function updateScore(){
     document.getElementById("score").innerText="النقاط: "+score;
     document.getElementById("level").innerText="Level: "+level;
 }
 
-// 🔙 رجوع
 function goBack(){
     window.location.href="index.html";
 }
