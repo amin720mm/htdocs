@@ -26,12 +26,6 @@ body {
     align-items:center;
     justify-content:center;
     z-index:9999;
-    animation: fadeOut 1s ease forwards;
-    animation-delay: 2.5s;
-}
-
-@keyframes fadeOut {
-    to { opacity:0; visibility:hidden; }
 }
 
 /* Logo */
@@ -62,6 +56,30 @@ body {
     to { transform:translateY(0); opacity:1; }
 }
 
+/* 🔥 Loading Bar */
+.loader {
+    width:220px;
+    height:8px;
+    background: rgba(255,255,255,0.2);
+    border-radius:10px;
+    margin-top:25px;
+    overflow:hidden;
+}
+
+.loader-bar {
+    height:100%;
+    width:0%;
+    background: linear-gradient(90deg, #00f2fe, #ffd700);
+    border-radius:10px;
+    animation: load 3s ease forwards;
+    box-shadow: 0 0 10px rgba(255,255,255,0.7);
+}
+
+@keyframes load {
+    from { width:0%; }
+    to { width:100%; }
+}
+
 /* الكروت */
 .card {
     cursor: pointer;
@@ -80,7 +98,6 @@ body {
     backdrop-filter: blur(12px);
     box-shadow: 0 15px 35px rgba(0,0,0,0.3);
     color: white;
-    animation: fadeUp 1s ease;
 }
 
 .footer-box p {
@@ -98,14 +115,12 @@ body {
 .signature span {
     font-weight: bold;
     color: #ffd700;
-    text-shadow: 0 0 8px rgba(255,215,0,0.7);
 }
 
 .footer-end {
     margin-top: 10px;
     font-weight: bold;
     color: #fff;
-    text-shadow: 0 0 10px rgba(255,255,255,0.8);
 }
 </style>
 
@@ -116,6 +131,12 @@ body {
 <!-- 🔥 Splash Screen -->
 <div id="splash">
     <img src="images/Logo.JPG" class="splash-logo">
+    <div class="splash-text">MANAI</div>
+
+    <!-- 🔥 Loading -->
+    <div class="loader">
+        <div class="loader-bar"></div>
+    </div>
 </div>
 
 <div class="container text-center">
@@ -157,18 +178,10 @@ body {
 
 <!-- Footer -->
 <div class="footer-box mt-4">
-
-<p id="about1">📚 هذا الموقع وسيلة تعليمية غير ربحية ومفتوحة للعموم</p>
-<p id="about2">تم إنشاؤه كهواية لتعلم اللغات وتطوير المهارات</p>
-<p id="about3">🌍 مشروع مفتوح المصدر للجميع</p>
-<p id="about4">🤝 المعرفة حق للجميع</p>
-
-<div class="signature" id="signature">
-    تم التطوير بواسطة <span>المبرمج المناعي</span> — Manai / Manaï
-</div>
-
-<p id="about5" class="footer-end">✨ من أجل حياة أفضل</p>
-
+<p>📚 موقع تعليمي غير ربحي ومفتوح للجميع</p>
+<p>🌍 مشروع مفتوح المصدر</p>
+<div class="signature">المبرمج المناعي — Manai / Manaï</div>
+<p class="footer-end">✨ من أجل حياة أفضل</p>
 </div>
 
 </div>
@@ -177,12 +190,14 @@ body {
 
 <script>
 
-// إزالة Splash بعد التحميل
+// 🔥 إخفاء Splash بعد انتهاء التحميل
 window.addEventListener("load", () => {
     setTimeout(()=>{
         document.getElementById("splash").style.display = "none";
     },3000);
 });
+
+// باقي كودك بدون حذف 👇
 
 // 🌍 الترجمات
 const translations = {
