@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
@@ -52,38 +53,51 @@ body {
 
 <body>
 
+<!-- 🔥 منع الدخول المباشر (الإضافة الوحيدة) -->
+
+<script>
+if(!sessionStorage.getItem("fromIndex")){
+    window.location.href = "index.html";
+}
+</script>
+
 <!-- Navbar -->
+
 <nav class="navbar navbar-dark px-3 shadow">
     <span id="title" class="navbar-brand fw-bold">⌨️ لعبة الكتابة</span>
     <button class="btn btn-light btn-sm" onclick="togglePanel()">⚙️</button>
 </nav>
 
 <!-- Panel -->
+
 <div id="panel" class="control-panel container py-3">
 
-    <!-- بحث -->
-    <div class="card p-2 mb-2 shadow-sm">
-        <div class="d-flex gap-2">
-            <input type="text" id="search" class="form-control"
-                   placeholder="🔎 ابحث..." oninput="loadFilteredData()">
-            <button id="backBtn" class="btn btn-outline-secondary" onclick="goBack()">⬅</button>
-        </div>
+```
+<!-- بحث -->
+<div class="card p-2 mb-2 shadow-sm">
+    <div class="d-flex gap-2">
+        <input type="text" id="search" class="form-control"
+               placeholder="🔎 ابحث..." oninput="loadFilteredData()">
+        <button id="backBtn" class="btn btn-outline-secondary" onclick="goBack()">⬅</button>
     </div>
+</div>
 
-    <!-- اللغات -->
-    <div class="card p-2 mb-2 shadow-sm">
-        <div class="d-flex flex-wrap justify-content-center gap-3">
-            <label><input type="radio" name="lang" value="ar"> عربي</label>
-            <label><input type="radio" name="lang" value="fr"> Français</label>
-            <label><input type="radio" name="lang" value="en"> English</label>
-            <label><input type="radio" name="lang" value="nl"> Nederlands</label>
-            <label><input type="radio" name="lang" value="de"> Deutsch</label>
-        </div>
+<!-- اللغات -->
+<div class="card p-2 mb-2 shadow-sm">
+    <div class="d-flex flex-wrap justify-content-center gap-3">
+        <label><input type="radio" name="lang" value="ar"> عربي</label>
+        <label><input type="radio" name="lang" value="fr"> Français</label>
+        <label><input type="radio" name="lang" value="en"> English</label>
+        <label><input type="radio" name="lang" value="nl"> Nederlands</label>
+        <label><input type="radio" name="lang" value="de"> Deutsch</label>
     </div>
+</div>
+```
 
 </div>
 
 <!-- اللعبة -->
+
 <div class="container py-4">
 <div class="card shadow p-3">
 
@@ -320,7 +334,7 @@ function goBack(){
 
 // 🔥 تشغيل
 window.onload=()=>{
-    applyGlobalLanguage(); // 🔥 الجديد
+    applyGlobalLanguage();
     loadLanguage();
     loadCategories();
     loadFilteredData();
